@@ -58,8 +58,8 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                          <Component id="CorreoTXT" min="-2" pref="327" max="-2" attributes="0"/>
-                                          <Component id="correoTXT" min="-2" pref="327" max="-2" attributes="0"/>
+                                          <Component id="txtpass" min="-2" pref="327" max="-2" attributes="0"/>
+                                          <Component id="txtUser" min="-2" pref="327" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jLabel4" min="-2" pref="213" max="-2" attributes="0"/>
                                       <Component id="jLabel5" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
@@ -88,11 +88,11 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel4" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="correoTXT" min="-2" pref="56" max="-2" attributes="0"/>
+                  <Component id="txtUser" min="-2" pref="56" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jLabel5" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="CorreoTXT" min="-2" pref="56" max="-2" attributes="0"/>
+                  <Component id="txtpass" min="-2" pref="56" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                   <Component id="jButton1" min="-2" pref="48" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -128,10 +128,13 @@
             </Property>
             <Property name="text" type="java.lang.String" value="INICIA SESION"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="correoTXT">
+        <Component class="javax.swing.JTextField" name="txtUser">
         </Component>
-        <Component class="javax.swing.JPasswordField" name="CorreoTXT">
+        <Component class="javax.swing.JPasswordField" name="txtpass">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
