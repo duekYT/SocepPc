@@ -20,11 +20,12 @@ public class usuario {
     int id_direcciones;
     int id_redes_sociales;
     String contrasenia;
+    String correo;
 
     public usuario() {
     }
 
-    public usuario(int id, String lada, String telefono, String logo, String descripcion, String nombre, int id_direcciones, int id_redes_sociales, String contrasenia) {
+    public usuario(int id, String lada, String telefono, String logo, String descripcion, String nombre, int id_direcciones, int id_redes_sociales, String contrasenia, String correo) {
         this.id = id;
         this.lada = lada;
         this.telefono = telefono;
@@ -34,8 +35,8 @@ public class usuario {
         this.id_direcciones = id_direcciones;
         this.id_redes_sociales = id_redes_sociales;
         this.contrasenia = contrasenia;
+        this.correo = correo;
     }
-
     public int getId() {
         return id;
     }
@@ -107,7 +108,12 @@ public class usuario {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
-    
-    
-    
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }   
 }

@@ -21,16 +21,16 @@ public class socioDAO {
     Conexion con=new Conexion();
     Connection acceso;
 
-    public usuario Validarusuario(String telefono,String contrasenia){
-          String sql="select socios.Telefono, socios.Contraseña from socios WHERE socios.Contraseña=? and socios.Telefono=?";
+    public usuario Validarusuario(String correo,String contrasenia){
+          String sql="select socios.Correo, socios.Contraseña from socios WHERE socios.Contraseña=? and socios.Correo=?";
         try {
             acceso=con.Conectar();
             ps=acceso.prepareStatement(sql);
-            ps.setString(1, telefono);
+            ps.setString(1, correo);
             ps.setString(2, contrasenia);
             rs=ps.executeQuery();
             while(rs.next()){
-                ev.setTelefono(rs.getString(1));
+                ev.setCorreo(rs.getString(1));
                 ev.setContrasenia(rs.getString(2));
             }
         } catch (Exception e) {
