@@ -5,6 +5,7 @@
  */
 package socepapp;
 
+import coperativa.Miembros;
 import coperativa.MisionVision;
 import coperativa.RedesSociales;
 import coperativa.informacion;
@@ -79,6 +80,24 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         }
    
     }
+    
+    private void pantallaMiembros() {
+        try {
+          //habrimos la pantalla de clientes
+          //String grupo = jLabel3.getText();
+          boolean b = true;
+          Miembros Miem = new Miembros();
+          this.escritorioCoperativa.removeAll();
+          this.escritorioCoperativa.repaint();
+          this.escritorioCoperativa.add(Miem);
+          Miem.setMaximum(b);
+          Miem.setVisible(true);  
+
+        } catch (PropertyVetoException ex) {
+          Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -137,6 +156,11 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         buttonGroup1.add(BTN_IC);
         BTN_IC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/miembro.png"))); // NOI18N
         BTN_IC.setText("MIEMBROS");
+        BTN_IC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTN_ICActionPerformed(evt);
+            }
+        });
 
         BTN_nl.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_nl);
@@ -196,11 +220,8 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 977, Short.MAX_VALUE)
-                    .addComponent(escritorioCoperativa))
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 977, Short.MAX_VALUE)
+            .addComponent(escritorioCoperativa)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,13 +235,11 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -237,6 +256,10 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     private void BTN_nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_nlActionPerformed
         pantallaInformacion();
     }//GEN-LAST:event_BTN_nlActionPerformed
+
+    private void BTN_ICActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_ICActionPerformed
+        pantallaMiembros();
+    }//GEN-LAST:event_BTN_ICActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
