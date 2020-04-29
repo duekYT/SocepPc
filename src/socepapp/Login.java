@@ -5,8 +5,6 @@
  */
 package socepapp;
 
-import codigo.socioDAO;
-import codigo.usuario;
 import javax.swing.JOptionPane;
 import usuarios.PrincipalUsuario;
 
@@ -19,32 +17,11 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    socioDAO sado = new socioDAO();
-    usuario es=new usuario();
     
     public Login() {
         initComponents();
     }
     
-        public void validar(){
-        String correo=txtUser.getText();
-        String contrasenia =txtpass.getText();
-        if(txtUser.getText().equals("")||txtpass.getText().equals("")){
-            JOptionPane.showMessageDialog(this, "Debe ingresar datos");
-            txtpass.requestFocus();
-        }else{
-            es=sado.Validarusuario(contrasenia, correo);
-            if (es.getCorreo()!= null && es.getContrasenia()!= null){
-            INICIO I = new INICIO();
-            I.setVisible(true);
-            I.setLocationRelativeTo(null);
-            dispose();
-        }else{
-                JOptionPane.showMessageDialog(this,"Debe ingresar usuarios validos");
-                txtpass.requestFocus();
-                }
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -206,7 +183,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       validar();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

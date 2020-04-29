@@ -5,12 +5,18 @@
  */
 package socepapp;
 
+import Objetos.Usuario;
+import codigo.Cifrado;
+import codigo.ConsultasSql;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Acer
  */
 public class Registrar extends javax.swing.JFrame {
-
+    ConsultasSql registro = new ConsultasSql();
+    Usuario modeloUsuario = new Usuario();
     /**
      * Creates new form Registrar
      */
@@ -24,9 +30,41 @@ public class Registrar extends javax.swing.JFrame {
             
             LabelTitulo.setText("Algunos Campos Estan vacios");
             
-        }else if(!TxtCorreo.getText().contains("@") || !TxtCorreo.getText().contains(".")){
-            TxtCorreo.setText("Correo invalido");
+        }else if(registro.esEmail(TxtCorreo.getText())){  
+            if(registro.ExiteUsuario(TxtNombreUsuaio.getText()) == 0){
+                String MiContrasenia = new String (TxtContraseña.getPassword());
+                String nuevaContraseña = Cifrado.sha1(MiContrasenia);
+
+                modeloUsuario.setNombre(TxtNombreUsuaio.getText());
+                modeloUsuario.setCorreo(TxtCorreo.getText());
+                modeloUsuario.setLada(TxtLada.getText());
+                modeloUsuario.setTelefono(TxtTelefono.getText());
+                modeloUsuario.setContrasenia(nuevaContraseña);
+                modeloUsuario.setRol(1);
+
+                if(registro.RegistrarUsuario(modeloUsuario)){
+                    JOptionPane.showMessageDialog(null, "registro Guardado");
+                    limpiar();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Error al registrar");
+                    limpiar();
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "El usuario: "+ TxtNombreUsuaio.getText()+" ya existe");
+                TxtNombreUsuaio.setText("");
+            }
         }
+        else{
+            JOptionPane.showMessageDialog(null, "correo invalido");
+        }
+    }
+    
+    public void limpiar(){
+        TxtContraseña.setText("");
+        TxtNombreUsuaio.setText("");
+        TxtCorreo.setText("");
+        TxtLada.setText("");
+        TxtTelefono.setText("");
     }
 
     /**
