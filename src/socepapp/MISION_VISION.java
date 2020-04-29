@@ -5,6 +5,13 @@
  */
 package socepapp;
 
+import coperativa.MisionVision;
+import coperativa.RedesSociales;
+import coperativa.informacion;
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author luisc
@@ -16,6 +23,61 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
      */
     public MISION_VISION() {
         initComponents();
+        pantallaInformacion();
+    }
+    
+    private void pantallaMisionVision() {
+        try {
+          //habrimos la pantalla de clientes
+          //String grupo = jLabel3.getText();
+          boolean b = true;
+          MisionVision MV = new MisionVision();
+          this.escritorioCoperativa.removeAll();
+          this.escritorioCoperativa.repaint();
+          this.escritorioCoperativa.add(MV);
+          MV.setMaximum(b);
+          MV.setVisible(true);  
+
+        } catch (PropertyVetoException ex) {
+          Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
+    }
+    
+    private void pantallaInformacion() {
+        try {
+          //habrimos la pantalla de clientes
+          //String grupo = jLabel3.getText();
+          boolean b = true;
+          informacion _info = new informacion();
+          this.escritorioCoperativa.removeAll();
+          this.escritorioCoperativa.repaint();
+          this.escritorioCoperativa.add(_info);
+          _info.setMaximum(b);
+          _info.setVisible(true);  
+
+        } catch (PropertyVetoException ex) {
+          Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
+    }
+    
+    private void pantallaResdesSociales() {
+        try {
+          //habrimos la pantalla de clientes
+          //String grupo = jLabel3.getText();
+          boolean b = true;
+          RedesSociales RS = new RedesSociales();
+          this.escritorioCoperativa.removeAll();
+          this.escritorioCoperativa.repaint();
+          this.escritorioCoperativa.add(RS);
+          RS.setMaximum(b);
+          RS.setVisible(true);  
+
+        } catch (PropertyVetoException ex) {
+          Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
     }
 
     /**
@@ -33,12 +95,10 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         BTN_mision = new javax.swing.JToggleButton();
-        BTN_vision = new javax.swing.JToggleButton();
         BTN_rs = new javax.swing.JToggleButton();
-        BTN_direcciones = new javax.swing.JToggleButton();
         BTN_IC = new javax.swing.JToggleButton();
         BTN_nl = new javax.swing.JToggleButton();
-        jDesktopPane2 = new javax.swing.JDesktopPane();
+        escritorioCoperativa = new javax.swing.JDesktopPane();
 
         setPreferredSize(new java.awt.Dimension(1250, 763));
 
@@ -56,100 +116,96 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         BTN_mision.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_mision);
         BTN_mision.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/negocios.png"))); // NOI18N
-        BTN_mision.setText("MISION");
-
-        BTN_vision.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(BTN_vision);
-        BTN_vision.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/vision.png"))); // NOI18N
-        BTN_vision.setText("VISION");
+        BTN_mision.setText("MISION Y VISION");
+        BTN_mision.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTN_misionActionPerformed(evt);
+            }
+        });
 
         BTN_rs.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_rs);
         BTN_rs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/megafono.png"))); // NOI18N
         BTN_rs.setText("REDES SOCIALES");
-
-        BTN_direcciones.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(BTN_direcciones);
-        BTN_direcciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/firmar.png"))); // NOI18N
-        BTN_direcciones.setText("DIRECCIONES");
+        BTN_rs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTN_rsActionPerformed(evt);
+            }
+        });
 
         BTN_IC.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_IC);
-        BTN_IC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/contacto.png"))); // NOI18N
-        BTN_IC.setText("INFORMACION DE CONTACTO");
+        BTN_IC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/miembro.png"))); // NOI18N
+        BTN_IC.setText("MIEMBROS");
 
         BTN_nl.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_nl);
         BTN_nl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/lapiz.png"))); // NOI18N
-        BTN_nl.setText("CAMBIAR LOGO Y NOMBRE");
+        BTN_nl.setText("INFORMACION");
+        BTN_nl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTN_nlActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 1, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 1099, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(BTN_nl, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(BTN_mision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(BTN_vision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(BTN_rs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(BTN_IC, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
-                            .addComponent(BTN_direcciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(BTN_mision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(BTN_nl, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(BTN_rs)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(BTN_IC, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BTN_mision)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTN_nl)
-                    .addComponent(BTN_vision)
-                    .addComponent(BTN_direcciones))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 3, Short.MAX_VALUE)
-                        .addComponent(BTN_mision))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BTN_rs)
-                            .addComponent(BTN_IC))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BTN_rs)
+                    .addComponent(BTN_IC)
+                    .addComponent(BTN_nl))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jDesktopPane2Layout = new javax.swing.GroupLayout(jDesktopPane2);
-        jDesktopPane2.setLayout(jDesktopPane2Layout);
-        jDesktopPane2Layout.setHorizontalGroup(
-            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout escritorioCoperativaLayout = new javax.swing.GroupLayout(escritorioCoperativa);
+        escritorioCoperativa.setLayout(escritorioCoperativaLayout);
+        escritorioCoperativaLayout.setHorizontalGroup(
+            escritorioCoperativaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jDesktopPane2Layout.setVerticalGroup(
-            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 596, Short.MAX_VALUE)
+        escritorioCoperativaLayout.setVerticalGroup(
+            escritorioCoperativaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 451, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jDesktopPane2)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 977, Short.MAX_VALUE)
+                    .addComponent(escritorioCoperativa))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jDesktopPane2)
+                .addComponent(escritorioCoperativa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -162,22 +218,34 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BTN_misionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_misionActionPerformed
+        pantallaMisionVision();
+    }//GEN-LAST:event_BTN_misionActionPerformed
+
+    private void BTN_rsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_rsActionPerformed
+       pantallaResdesSociales();
+    }//GEN-LAST:event_BTN_rsActionPerformed
+
+    private void BTN_nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_nlActionPerformed
+        pantallaInformacion();
+    }//GEN-LAST:event_BTN_nlActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton BTN_IC;
-    private javax.swing.JToggleButton BTN_direcciones;
     private javax.swing.JToggleButton BTN_mision;
     private javax.swing.JToggleButton BTN_nl;
     private javax.swing.JToggleButton BTN_rs;
-    private javax.swing.JToggleButton BTN_vision;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JDesktopPane jDesktopPane2;
+    private javax.swing.JDesktopPane escritorioCoperativa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

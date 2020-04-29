@@ -17,6 +17,17 @@ public class Registrar extends javax.swing.JFrame {
     public Registrar() {
         initComponents();
     }
+    
+    public void ValidarRegistro(){
+        if(TxtNombreUsuaio.getText().isEmpty() || TxtCorreo.getText().isEmpty() ||
+                TxtLada.getText().isEmpty() || TxtTelefono.getText().isEmpty() || TxtContraseña.getText().isEmpty()){
+            
+            LabelTitulo.setText("Algunos Campos Estan vacios");
+            
+        }else if(!TxtCorreo.getText().contains("@") || !TxtCorreo.getText().contains(".")){
+            TxtCorreo.setText("Correo invalido");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,19 +42,19 @@ public class Registrar extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtUser = new javax.swing.JTextField();
+        LabelTitulo = new javax.swing.JLabel();
+        TxtNombreUsuaio = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtUser1 = new javax.swing.JTextField();
+        TxtLada = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        txtUser2 = new javax.swing.JTextField();
-        txtUser3 = new javax.swing.JTextField();
+        TxtTelefono = new javax.swing.JTextField();
+        TxtCorreo = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        TxtContraseña = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        RegistraUsuario = new javax.swing.JButton();
+        VentanaRegistroSocio = new javax.swing.JButton();
+        VentanaLogin = new javax.swing.JButton();
 
         jButton4.setBackground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REGISTRATE");
@@ -61,19 +72,43 @@ public class Registrar extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/negro.png"))); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("REGISTRAR USUARIO");
+        LabelTitulo.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        LabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelTitulo.setText("REGISTRAR USUARIO");
+
+        TxtNombreUsuaio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtNombreUsuaioActionPerformed(evt);
+            }
+        });
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 18)); // NOI18N
         jLabel5.setText("CORREO ELECTRONICO:");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
+        TxtLada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TxtLadaKeyTyped(evt);
+            }
+        });
+
         jLabel6.setBackground(new java.awt.Color(255, 255, 255));
         jLabel6.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 18)); // NOI18N
         jLabel6.setText("LADA Y TELEFONO:");
         jLabel6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+
+        TxtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TxtTelefonoKeyTyped(evt);
+            }
+        });
+
+        TxtCorreo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TxtCorreoKeyTyped(evt);
+            }
+        });
 
         jLabel7.setBackground(new java.awt.Color(255, 255, 255));
         jLabel7.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 18)); // NOI18N
@@ -85,55 +120,65 @@ public class Registrar extends javax.swing.JFrame {
         jLabel8.setText("NOMBRE DE USUARIO:");
         jLabel8.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("REGISTRATE");
-        jButton2.setActionCommand("");
-
-        jButton5.setBackground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("REGISTRATE COMO SOCIO");
-        jButton5.setActionCommand("");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        RegistraUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        RegistraUsuario.setText("REGISTRATE");
+        RegistraUsuario.setActionCommand("");
+        RegistraUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                RegistraUsuarioActionPerformed(evt);
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("INICIA SESION");
-        jButton6.setActionCommand("");
+        VentanaRegistroSocio.setBackground(new java.awt.Color(255, 255, 255));
+        VentanaRegistroSocio.setText("REGISTRATE COMO SOCIO");
+        VentanaRegistroSocio.setActionCommand("");
+        VentanaRegistroSocio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VentanaRegistroSocioActionPerformed(evt);
+            }
+        });
+
+        VentanaLogin.setBackground(new java.awt.Color(255, 255, 255));
+        VentanaLogin.setText("INICIA SESION");
+        VentanaLogin.setActionCommand("");
+        VentanaLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VentanaLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(LabelTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(VentanaLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(RegistraUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(VentanaRegistroSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(txtUser1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TxtLada, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtUser2))
-                                        .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(TxtTelefono))
+                                        .addComponent(TxtNombreUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtUser3)
+                                    .addComponent(TxtCorreo)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))))
+                                    .addComponent(TxtContraseña, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -142,14 +187,14 @@ public class Registrar extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addComponent(LabelTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUser3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(TxtNombreUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TxtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -160,18 +205,18 @@ public class Registrar extends javax.swing.JFrame {
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtUser1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUser2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(TxtLada, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(TxtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(RegistraUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(VentanaRegistroSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(VentanaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -189,9 +234,45 @@ public class Registrar extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void VentanaRegistroSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VentanaRegistroSocioActionPerformed
+        RegistrarSocio rs = new RegistrarSocio();
+        rs.setVisible(true);
+        rs.setLocationRelativeTo(null);
+        dispose();
+    }//GEN-LAST:event_VentanaRegistroSocioActionPerformed
+
+    private void VentanaLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VentanaLoginActionPerformed
+        Login logeo = new Login();
+        logeo.setVisible(true);
+        logeo.setLocationRelativeTo(null);
+        dispose();
+    }//GEN-LAST:event_VentanaLoginActionPerformed
+
+    private void TxtNombreUsuaioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtNombreUsuaioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_TxtNombreUsuaioActionPerformed
+
+    private void TxtCorreoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtCorreoKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtCorreoKeyTyped
+
+    private void TxtLadaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtLadaKeyTyped
+       char c = evt.getKeyChar();
+       if(c<'0' || c>'9'){
+           evt.consume();
+       }
+    }//GEN-LAST:event_TxtLadaKeyTyped
+
+    private void TxtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtTelefonoKeyTyped
+       char c = evt.getKeyChar();
+       if(c<'0' || c>'9'){
+           evt.consume();
+       }
+    }//GEN-LAST:event_TxtTelefonoKeyTyped
+
+    private void RegistraUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistraUsuarioActionPerformed
+        ValidarRegistro();
+    }//GEN-LAST:event_RegistraUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,22 +310,22 @@ public class Registrar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel LabelTitulo;
+    private javax.swing.JButton RegistraUsuario;
+    private javax.swing.JPasswordField TxtContraseña;
+    private javax.swing.JTextField TxtCorreo;
+    private javax.swing.JTextField TxtLada;
+    private javax.swing.JTextField TxtNombreUsuaio;
+    private javax.swing.JTextField TxtTelefono;
+    private javax.swing.JButton VentanaLogin;
+    private javax.swing.JButton VentanaRegistroSocio;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField txtUser;
-    private javax.swing.JTextField txtUser1;
-    private javax.swing.JTextField txtUser2;
-    private javax.swing.JTextField txtUser3;
     // End of variables declaration//GEN-END:variables
 }
