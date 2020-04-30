@@ -5,16 +5,31 @@
  */
 package socepapp;
 
+import codigo.Conexion;
+import codigo.Imagen;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.filechooser.*;
+
 /**
  *
  * @author Acer
  */
 public class RegistrarSocio extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form RegistrarSocio
      */
     public RegistrarSocio() {
+
         initComponents();
     }
     
@@ -44,8 +59,7 @@ public class RegistrarSocio extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         labeltitulo = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        Icono = new javax.swing.JLabel();
+        PanelImagen = new javax.swing.JPanel();
         BtnInsertaLogo = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         TxtNombreCoparativa = new javax.swing.JTextField();
@@ -97,15 +111,15 @@ public class RegistrarSocio extends javax.swing.JFrame {
         labeltitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labeltitulo.setText("REGISTRAR SOCIO");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Icono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelImagenLayout = new javax.swing.GroupLayout(PanelImagen);
+        PanelImagen.setLayout(PanelImagenLayout);
+        PanelImagenLayout.setHorizontalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Icono, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+        PanelImagenLayout.setVerticalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
 
         BtnInsertaLogo.setBackground(new java.awt.Color(255, 255, 255));
@@ -244,7 +258,7 @@ public class RegistrarSocio extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(BtnInsertaLogo, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(PanelImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -298,7 +312,7 @@ public class RegistrarSocio extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PanelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnInsertaLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -364,7 +378,51 @@ public class RegistrarSocio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnInsertaLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInsertaLogoActionPerformed
-        // TODO add your handling code here:
+        
+        PanelImagen.removeAll();
+        PanelImagen.repaint();
+        
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.PNG", "png");
+        FileNameExtensionFilter filtro2 = new FileNameExtensionFilter("*.JPG", "jpg");
+        fc.setFileFilter(filtro);
+        fc.setFileFilter(filtro2);
+        
+        int selecion = fc.showOpenDialog(this);
+        
+        PreparedStatement ps;
+        ResultSet retultado;
+        Conexion con = new Conexion();
+        
+        if(selecion == JFileChooser.APPROVE_OPTION){
+            File fichero = fc.getSelectedFile();
+            String ruta = fichero.getAbsolutePath();
+            System.out.println("tu imagen esta en: " + ruta);
+            
+            try {
+                FileInputStream fis = new FileInputStream(fichero);
+                Connection objCon = con.Conectar();
+                try {
+                    ps = objCon.prepareStatement("INSERT INTO imagen(imagen) VALUES (?)");
+                    ps.setBinaryStream(1, fis, (int)fichero.length());
+                    ps.execute();
+                    
+                    JOptionPane.showMessageDialog(null, "Dato guardado");
+                    /*int ancho = PanelImagen.getWidth();
+                    int alto = PanelImagen.getHeight();
+                    Imagen img = new Imagen(ancho,alto,ruta);
+                    PanelImagen.repaint();
+                    PanelImagen.add(img);*/
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegistrarSocio.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Dato no guardado");
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(RegistrarSocio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_BtnInsertaLogoActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -431,7 +489,7 @@ public class RegistrarSocio extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtCodigoPostalKeyTyped
 
     private void RegistrateScoioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrateScoioActionPerformed
-        ValidaRegistro();
+
     }//GEN-LAST:event_RegistrateScoioActionPerformed
 
     private void TxtLocalidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtLocalidadKeyTyped
@@ -479,7 +537,7 @@ public class RegistrarSocio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnInsertaLogo;
     private javax.swing.JComboBox<String> ComboEstados;
-    private javax.swing.JLabel Icono;
+    private javax.swing.JPanel PanelImagen;
     private javax.swing.JButton RegistrateScoio;
     private javax.swing.JTextField TxtCodigoPostal;
     private javax.swing.JPasswordField TxtContraseña;
@@ -504,7 +562,6 @@ public class RegistrarSocio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel labeltitulo;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
