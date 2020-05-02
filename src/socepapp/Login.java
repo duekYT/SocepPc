@@ -5,7 +5,10 @@
  */
 package socepapp;
 
+import Objetos.MiModeloUsuario;
+import codigo.Cifrado;
 import codigo.ConsultasCrud;
+import codigo.IniciaSesion;
 import javax.swing.JOptionPane;
 import usuarios.PrincipalUsuario;
 import utilidades.configuracionXml;
@@ -17,6 +20,9 @@ import utilidades.configuracionXml;
 public class Login extends javax.swing.JFrame {
     configuracionXml config = new configuracionXml();
     ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    IniciaSesion sesion = new IniciaSesion(config.getConexion().getConexion());
+    MiModeloUsuario mod = new MiModeloUsuario();
+    
     /**
      * Creates new form Login
      */
@@ -26,7 +32,9 @@ public class Login extends javax.swing.JFrame {
     }
     
     public void Logeo(){
-        
+        String correo = txtUser.getText();
+        String contrasenia = txtpass.getText();
+        sesion.Inicia_Sesion(correo, contrasenia, mod);
     }
     
 
@@ -190,7 +198,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        Logeo();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
