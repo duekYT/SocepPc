@@ -65,7 +65,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanel1" min="-2" pref="666" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -85,67 +85,65 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="BtnInsertaLogo" pref="400" max="32767" attributes="0"/>
-                      <Component id="PanelImagen" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="BtnInsertaLogo" pref="400" max="32767" attributes="0"/>
+                              <Component id="PanelImagen" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="VentanaLogin" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="TxtCodigoPostal" max="32767" attributes="0"/>
-                                  <Component id="TxtCorreo" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel9" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
-                                  <Component id="TxtNombreCoparativa" alignment="0" pref="327" max="32767" attributes="0"/>
-                                  <Component id="jLabel5" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
-                                  <Component id="ComboEstados" alignment="0" max="32767" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="TxtCodigoPostal" alignment="1" max="32767" attributes="0"/>
+                              <Component id="TxtCorreo" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jLabel9" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
+                              <Component id="TxtNombreSocio" alignment="0" pref="327" max="32767" attributes="0"/>
+                              <Component id="jLabel5" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
+                              <Component id="jLabel14" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
                               <Component id="jLabel12" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
+                              <Component id="jLabel13" min="-2" pref="213" max="-2" attributes="0"/>
+                              <Component id="TxtContraseña" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace pref="16" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel13" min="-2" pref="213" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="TxtLocalidad" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <Component id="TxtLada" min="-2" pref="60" max="-2" attributes="0"/>
-                                                      <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="TxtTelefono" max="32767" attributes="0"/>
-                                                  </Group>
-                                                  <Component id="TxtNombreCoperativa" min="-2" pref="327" max="-2" attributes="0"/>
-                                                  <Component id="jLabel10" min="-2" pref="267" max="-2" attributes="0"/>
-                                                  <Component id="jLabel6" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Component id="jLabel11" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="TxtLada" min="-2" pref="60" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="TxtTelefono" max="32767" attributes="0"/>
                                           </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          <Component id="TxtNombreEmpresa" min="-2" pref="327" max="-2" attributes="0"/>
+                                          <Component id="jLabel10" min="-2" pref="267" max="-2" attributes="0"/>
+                                          <Component id="jLabel6" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="TxtLocalidad" max="32767" attributes="0"/>
-                                      <Component id="TxtContraseña" pref="337" max="32767" attributes="0"/>
+                                      <Component id="jLabel11" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
+                                      <Component id="jLabel7" min="-2" pref="213" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="ComboEstados" min="-2" pref="327" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="RegistrateScoio" min="-2" pref="327" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="VentanaRegistroUsuario" max="32767" attributes="0"/>
-                              </Group>
-                              <Component id="VentanaLogin" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="RegistrateScoio" min="-2" pref="327" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="VentanaRegistroUsuario" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="TxtDireccion" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -158,21 +156,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="PanelImagen" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="BtnInsertaLogo" min="-2" pref="48" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="TxtNombreCoperativa" min="-2" pref="56" max="-2" attributes="0"/>
+                                  <Component id="TxtNombreEmpresa" min="-2" pref="56" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="TxtNombreCoparativa" min="-2" pref="56" max="-2" attributes="0"/>
+                                  <Component id="TxtNombreSocio" min="-2" pref="56" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -187,42 +180,44 @@
                               <Component id="TxtTelefono" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="ComboEstados" min="-2" pref="56" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="TxtLocalidad" min="-2" pref="56" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="TxtCodigoPostal" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
-                                      <Component id="TxtContraseña" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="TxtLocalidad" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
+                              <Component id="TxtContraseña" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="TxtCodigoPostal" min="-2" pref="56" max="-2" attributes="0"/>
+                              <Component id="ComboEstados" min="-2" pref="56" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="TxtDireccion" min="-2" pref="56" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="RegistrateScoio" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
                               <Component id="VentanaRegistroUsuario" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
+                              <Component id="VentanaLogin" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="PanelImagen" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="VentanaLogin" min="-2" pref="48" max="-2" attributes="0"/>
+                          <Component id="BtnInsertaLogo" min="-2" pref="48" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -287,14 +282,14 @@
             <Property name="verticalAlignment" type="int" value="3"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TxtNombreCoparativa">
+        <Component class="javax.swing.JTextField" name="TxtNombreSocio">
           <Events>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TxtNombreCoparativaKeyTyped"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TxtNombreSocioKeyTyped"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="TxtNombreCoperativa">
+        <Component class="javax.swing.JTextField" name="TxtNombreEmpresa">
           <Events>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TxtNombreCoperativaKeyTyped"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TxtNombreEmpresaKeyTyped"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
@@ -488,6 +483,23 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="VentanaLoginActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel14">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Yu Gothic UI Light" size="18" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="DIRECCION:"/>
+            <Property name="verticalAlignment" type="int" value="3"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="TxtDireccion">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TxtDireccionKeyTyped"/>
           </Events>
         </Component>
       </SubComponents>

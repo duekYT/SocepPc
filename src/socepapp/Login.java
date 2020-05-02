@@ -5,21 +5,28 @@
  */
 package socepapp;
 
+import codigo.ConsultasCrud;
 import javax.swing.JOptionPane;
 import usuarios.PrincipalUsuario;
+import utilidades.configuracionXml;
 
 /**
  *
  * @author luisc
  */
 public class Login extends javax.swing.JFrame {
-
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
     /**
      * Creates new form Login
      */
     
     public Login() {
         initComponents();
+    }
+    
+    public void Logeo(){
+        
     }
     
 

@@ -9,14 +9,28 @@ import Objetos.Usuario;
 import codigo.Cifrado;
 import codigo.ConsultasSql;
 import javax.swing.JOptionPane;
+import codigo.ConsultasCrud;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utilidades.*;
 
 /**
  *
  * @author Acer
  */
 public class Registrar extends javax.swing.JFrame {
-    ConsultasSql registro = new ConsultasSql();
     Usuario modeloUsuario = new Usuario();
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    ConsultasSql registro = new ConsultasSql(config.getConexion().getConexion());
+    
+    private String campos = "Nombre, Correo_electronico, lada, Telefono, Contraseña, Id_roles";
+    private String id_pk = "Id";
+    private String tabla = "usuario";
+    
     /**
      * Creates new form Registrar
      */
@@ -25,6 +39,7 @@ public class Registrar extends javax.swing.JFrame {
     }
     
     public void ValidarRegistro(){
+       
         if(TxtNombreUsuaio.getText().isEmpty() || TxtCorreo.getText().isEmpty() ||
                 TxtLada.getText().isEmpty() || TxtTelefono.getText().isEmpty() || TxtContraseña.getText().isEmpty()){
             
@@ -32,22 +47,34 @@ public class Registrar extends javax.swing.JFrame {
             
         }else if(registro.esEmail(TxtCorreo.getText())){  
             if(registro.ExiteUsuario(TxtNombreUsuaio.getText()) == 0){
-                String MiContrasenia = new String (TxtContraseña.getPassword());
-                String nuevaContraseña = Cifrado.sha1(MiContrasenia);
-
-                modeloUsuario.setNombre(TxtNombreUsuaio.getText());
-                modeloUsuario.setCorreo(TxtCorreo.getText());
-                modeloUsuario.setLada(TxtLada.getText());
-                modeloUsuario.setTelefono(TxtTelefono.getText());
-                modeloUsuario.setContrasenia(nuevaContraseña);
-                modeloUsuario.setRol(1);
-
-                if(registro.RegistrarUsuario(modeloUsuario)){
-                    JOptionPane.showMessageDialog(null, "registro Guardado");
-                    limpiar();
-                }else{
-                    JOptionPane.showMessageDialog(null, "Error al registrar");
-                    limpiar();
+                try {
+                    String MiContrasenia = new String (TxtContraseña.getPassword());
+                    String nuevaContraseña = Cifrado.sha1(MiContrasenia);
+                    
+                    modeloUsuario.setNombre(TxtNombreUsuaio.getText());
+                    modeloUsuario.setCorreo(TxtCorreo.getText());
+                    modeloUsuario.setLada(TxtLada.getText());
+                    modeloUsuario.setTelefono(TxtTelefono.getText());
+                    modeloUsuario.setContrasenia(nuevaContraseña);
+                    modeloUsuario.setRol(1);
+                    
+                    List<Object> datos = new ArrayList<>();
+                    datos.add(modeloUsuario.getNombre());
+                    datos.add(modeloUsuario.getCorreo());
+                    datos.add(modeloUsuario.getLada());
+                    datos.add(modeloUsuario.getTelefono());
+                    datos.add(modeloUsuario.getContrasenia());
+                    datos.add(modeloUsuario.getRol());
+                    
+                    if(crud.ingresar(datos, tabla, campos)){
+                        JOptionPane.showMessageDialog(null, "registro Guardado");
+                        limpiar();
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Error al registrar");
+                        limpiar();
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "El usuario: "+ TxtNombreUsuaio.getText()+" ya existe");

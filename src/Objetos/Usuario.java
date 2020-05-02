@@ -12,7 +12,6 @@ package Objetos;
 public class Usuario {
     private int id;
     private String nombre;
-    private String id_Direccion;
     private String correo;
     private String lada;
     private String telefono;
@@ -33,14 +32,6 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getId_Direccion() {
-        return id_Direccion;
-    }
-
-    public void setId_Direccion(String id_Direccion) {
-        this.id_Direccion = id_Direccion;
     }
 
     public String getCorreo() {
