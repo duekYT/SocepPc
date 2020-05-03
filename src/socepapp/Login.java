@@ -18,6 +18,7 @@ import utilidades.configuracionXml;
  * @author luisc
  */
 public class Login extends javax.swing.JFrame {
+    public boolean res;
     configuracionXml config = new configuracionXml();
     ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
     IniciaSesion sesion = new IniciaSesion(config.getConexion().getConexion());
@@ -34,7 +35,28 @@ public class Login extends javax.swing.JFrame {
     public void Logeo(){
         String correo = txtUser.getText();
         String contrasenia = txtpass.getText();
-        sesion.Inicia_Sesion(correo, contrasenia, mod);
+        boolean respuesta =  sesion.Inicia_Sesion(correo, contrasenia, mod, res);
+        
+        if(respuesta == true){
+            switch(mod.getId_rol()){
+                case 1:
+                    System.out.println( mod.getRol() );
+                    PrincipalUsuario PU = new PrincipalUsuario();
+                    PU.setVisible(true);
+                    PU.setLocationRelativeTo(null);
+                    dispose();
+                break;
+                case 2:
+                    System.out.println( mod.getRol() );
+                    INICIO So = new INICIO(mod);
+                    So.setVisible(true);
+                    So.setLocationRelativeTo(null);
+                    dispose();
+                break;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Correo electronico o contraseña incorrectos");
+        }
     }
     
 

@@ -5,22 +5,41 @@
  */
 package socepapp;
 
+import Objetos.MiModeloUsuario;
+import codigo.ConsultasCrud;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utilidades.configuracionXml;
 
 /**
  *
  * @author luisc
  */
 public class INICIO extends javax.swing.JFrame {
-
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    MiModeloUsuario mod;
+    
+    String campos = "Nombre";
+    String id = "Id";
+    String tabla = "socios";
     /**
      * Creates new form INICIO
      */
+    public INICIO(MiModeloUsuario mod) {
+        this.mod = mod;
+        initComponents();
+        pantallaCoperativa();
+        ConfigurarPanel();
+    }
     public INICIO() {
         initComponents();
         pantallaCoperativa();
+    }
+    
+    public void ConfigurarPanel(){
+        coperativaLabel.setText(mod.getNombreUsuario());
     }
     
     private void pantallaCoperativa() {
@@ -28,7 +47,7 @@ public class INICIO extends javax.swing.JFrame {
       //habrimos la pantalla de clientes
       //String grupo = jLabel3.getText();
       boolean b = true;
-      MISION_VISION coperativa = new MISION_VISION();
+      MISION_VISION coperativa = new MISION_VISION(mod);
       this.escritorio.removeAll();
       this.escritorio.repaint();
       this.escritorio.add(coperativa);
@@ -162,7 +181,7 @@ public class INICIO extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
 
-        coperativaLabel.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        coperativaLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         coperativaLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         coperativaLabel.setText("Mi coperativa");
         coperativaLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -246,7 +265,7 @@ public class INICIO extends javax.swing.JFrame {
                 .addComponent(BTN_eventos)
                 .addGap(18, 18, 18)
                 .addComponent(BTN_ventas)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         BTN_salir.setBackground(new java.awt.Color(255, 255, 255));

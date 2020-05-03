@@ -125,7 +125,6 @@ public class ConsultasCrud extends conexionBaseDatos{
         
         ps.close();
         resultado.close();
-        
         return filalista;
     }
     
@@ -171,6 +170,41 @@ public class ConsultasCrud extends conexionBaseDatos{
         }
         
          return id;
+    }
+    
+    public List<String> SeleccionInformacion (int respuesta){
+        
+        String query = "SELECT direcciones_socios.Estado, direcciones_socios.Municipio, "
+                + "direcciones_socios.Direccion, socios.Nombre, socios.lada, socios.Telefono, socios.Correo " 
+                + "FROM socios INNER JOIN direcciones_socios on socios.Id_Direcciones = direcciones_socios.Id WHERE socios.Id = " 
+                + respuesta + ";";
+        List<String> milista = new ArrayList<>();
+        
+            try {
+            
+            PreparedStatement ps = conexion.prepareStatement(query);
+            ResultSet resultado = ps.executeQuery();
+            int contador = 0;
+            if(resultado.next()){
+                milista.add(resultado.getString("socios.Nombre"));
+                milista.add(resultado.getString("socios.lada"));
+                milista.add(resultado.getString("socios.Telefono"));
+                milista.add(resultado.getString("socios.Correo"));
+                milista.add(resultado.getString("direcciones_socios.Estado"));
+                milista.add(resultado.getString("direcciones_socios.Municipio"));
+                milista.add(resultado.getString("direcciones_socios.Direccion"));
+                while( resultado.next() ){
+                    resultado.getInt(milista.get(contador));
+                    contador++;
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultasSql.class.getName()).log(Level.SEVERE, null, ex);
+           
+        }
+        
+         return milista;
     }
     
     public boolean esEmail(String correo) {

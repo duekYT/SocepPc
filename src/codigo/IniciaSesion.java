@@ -17,14 +17,15 @@ import java.util.logging.Logger;
  * @author Acer
  */
 public class IniciaSesion extends conexionBaseDatos{
-    
     public IniciaSesion(Connection _conexion) {
         conexion = _conexion;
     }
     
-    public void Inicia_Sesion(String correo, String contasenia, MiModeloUsuario mod){
+    public boolean Inicia_Sesion(String correo, String contasenia, MiModeloUsuario mod, boolean respuesta){
         PreparedStatement ps = null;
         ResultSet resultado = null;
+        
+        
         
         String consultaSocio = "SELECT count(Id) AS 'socio' FROM socios WHERE Contraseña = ? and Correo = ?";
         String consultaUsuario = "SELECT count(Id) AS 'usuario' FROM usuario WHERE Contraseña = ? and Correo_electronico = ?";
@@ -39,14 +40,25 @@ public class IniciaSesion extends conexionBaseDatos{
             if ( resultado.next() ){
                 if(resultado.getInt("socio") == 1){
                     System.out.println("estas en el area de Socios");
-                    String InnerSocio = "SELECT roles.Id_rol, roles.Nombre, socios.Id, socios.Nombre, socios.Contraseña, "
-                            + "socios.Correo, socios.Id_Direcciones, socios.Id_Redes_sociales, socios.Mision, socios.NombreSocio, "
-                            + "socios.Telefono, socios.Vision, socios.lada, socios.logo FROM socios INNER JOIN roles on socios.Id_rol = roles.Id_rol "
-                            + "WHERE socios.Id_rol = 2 and socios.Contraseña = ? and socios.Correo = ?;";
+                    String InnerSocio = "SELECT roles.Id_rol, roles.Nombre, socios.Id, socios.Nombre FROM socios INNER JOIN roles on socios.Id_rol = roles.Id_rol WHERE socios.Id_rol = 2 AND socios.Correo = ? AND socios.Contraseña = ?";
                     ps = conexion.prepareStatement(InnerSocio);
-                    ps.setString(1, contasenia);
-                    ps.setString(2, correo);
+                    ps.setString(1, correo);
+                    ps.setString(2, contasenia);
                     resultado = ps.executeQuery();
+                    
+                    if(resultado.next()){
+                        respuesta = true;
+                        mod.setIdUsuario(resultado.getInt("socios.Id"));
+                        mod.setNombreUsuario(resultado.getString("socios.Nombre"));
+                        mod.setRol(resultado.getString("roles.Nombre"));
+                        mod.setId_rol(resultado.getInt("roles.Id_rol"));
+                    }else{
+                        respuesta = false;
+                    }
+                    
+                    ps.close();
+                    resultado.close();
+                    
                 }else{
                     resultado = null;
                     ps = null;
@@ -60,12 +72,22 @@ public class IniciaSesion extends conexionBaseDatos{
                         
                         if(resultado.getInt("usuario") == 1){
                             System.out.println("estas en el area de Usuarios");
-                            String InnerUsuario = "SELECT roles.Id_rol, roles.Nombre, usuario.Id, usuario.Nombre FROM usuario INNER JOIN roles on usuario.Id_roles = roles.Id_rol "
-                                    + "WHERE usuario.Id_rol = 1 and usuario.Contraseña = ? and usuario.Correo_electronico = ?;";
+                            String InnerUsuario = "SELECT roles.Id_rol, roles.Nombre, usuario.Id, usuario.Nombre FROM usuario INNER JOIN roles on usuario.Id_roles = roles.Id_rol WHERE usuario.Id_roles = 1 and usuario.Contraseña = ? and usuario.Correo_electronico = ?;";
                             ps = conexion.prepareStatement(InnerUsuario);
                             ps.setString(1, contasenia);
                             ps.setString(2, correo);
                             resultado = ps.executeQuery();
+                            if(resultado.next()){
+                                respuesta = true;
+                                mod.setIdUsuario(resultado.getInt("usuario.Id"));
+                                mod.setNombreUsuario(resultado.getString("usuario.Nombre"));
+                                mod.setRol(resultado.getString("roles.Nombre"));
+                                mod.setId_rol(resultado.getInt("roles.Id_rol"));
+                            }else{
+                                respuesta = false;
+                            }
+                            ps.close();
+                            resultado.close();
                         }
                     }
             }
@@ -79,6 +101,8 @@ public class IniciaSesion extends conexionBaseDatos{
         } catch (SQLException ex) {
             Logger.getLogger(IniciaSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return respuesta;
     }
     
     

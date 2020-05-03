@@ -5,6 +5,8 @@
  */
 package socepapp;
 
+import Objetos.MiModeloUsuario;
+import codigo.ConsultasCrud;
 import coperativa.Miembros;
 import coperativa.MisionVision;
 import coperativa.RedesSociales;
@@ -12,19 +14,32 @@ import coperativa.informacion;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utilidades.configuracionXml;
 
 /**
  *
  * @author luisc
  */
 public class MISION_VISION extends javax.swing.JInternalFrame {
-
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    MiModeloUsuario mod;
     /**
      * Creates new form MISION_VISION
      */
+    public MISION_VISION(MiModeloUsuario mod) {
+        this.mod = mod;
+        initComponents();
+        ConfigurarPanel();
+        pantallaInformacion();
+    }
+    
     public MISION_VISION() {
         initComponents();
-        pantallaInformacion();
+    }
+    
+    public void ConfigurarPanel(){
+        LabelCoperativa.setText(mod.getNombreUsuario());
     }
     
     private void pantallaMisionVision() {
@@ -50,7 +65,7 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          informacion _info = new informacion();
+          informacion _info = new informacion(mod);
           this.escritorioCoperativa.removeAll();
           this.escritorioCoperativa.repaint();
           this.escritorioCoperativa.add(_info);
@@ -112,7 +127,7 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        LabelCoperativa = new javax.swing.JLabel();
         BTN_mision = new javax.swing.JToggleButton();
         BTN_rs = new javax.swing.JToggleButton();
         BTN_IC = new javax.swing.JToggleButton();
@@ -128,9 +143,9 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Mi coperativa");
+        LabelCoperativa.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        LabelCoperativa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        LabelCoperativa.setText("Mi coperativa");
 
         BTN_mision.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(BTN_mision);
@@ -180,21 +195,21 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 1099, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(BTN_mision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(BTN_nl, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(BTN_rs)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(BTN_IC, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(BTN_mision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(BTN_nl, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BTN_rs)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BTN_IC, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LabelCoperativa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(428, 428, 428))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addComponent(LabelCoperativa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BTN_mision)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -267,10 +282,10 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     private javax.swing.JToggleButton BTN_mision;
     private javax.swing.JToggleButton BTN_nl;
     private javax.swing.JToggleButton BTN_rs;
+    private javax.swing.JLabel LabelCoperativa;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDesktopPane escritorioCoperativa;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
