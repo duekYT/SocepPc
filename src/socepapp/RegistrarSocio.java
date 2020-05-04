@@ -79,7 +79,6 @@ public class RegistrarSocio extends javax.swing.JFrame {
                 
                 if(crud.CompruebaExistencias(TxtNombreEmpresa.getText(), tablaSocios, "Nombre", id_pkSocios) == 0){
                     int codigopostal = Integer.parseInt(TxtCodigoPostal.getText());
-        
                     int lada = Integer.parseInt(TxtLada.getText());
                     try {
                         

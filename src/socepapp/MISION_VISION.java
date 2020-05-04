@@ -47,7 +47,7 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          MisionVision MV = new MisionVision();
+          MisionVision MV = new MisionVision(mod);
           this.escritorioCoperativa.removeAll();
           this.escritorioCoperativa.repaint();
           this.escritorioCoperativa.add(MV);

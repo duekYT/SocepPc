@@ -72,11 +72,11 @@ public class ConsultasCrud extends conexionBaseDatos{
     public boolean actualizar(List<Object> values, String tabla, String campos, String id_pk) throws SQLException {
         int contador = 0;
         int tamanioLista = values.size();
-        String query = "UPDATE " + tabla + " SET " + campos + " WHERE " + id_pk + " = ?";
-        
+        String query = "UPDATE " + tabla + " SET " + campos + " WHERE " + id_pk + " = ?;";
+        System.out.println(query);
         PreparedStatement ps = conexion.prepareStatement(query);
         
-        for (int j = 0; j < tamanioLista-1; j++) {
+        for (int j = 0; j < tamanioLista; j++) {
             contador = j+1;
             ps.setObject(contador, values.get(j));
         }
@@ -216,6 +216,27 @@ public class ConsultasCrud extends conexionBaseDatos{
 
         return mather.find();
 
+    }
+    
+    public String SeleccinaUnCampo (String tabla, String campos, String id, int respuesta){
+        
+        String Campo = "";
+        String query = "SELECT " + campos + " FROM " + tabla + " WHERE "+id+" = "+respuesta+";";
+        try {
+            
+            PreparedStatement ps = conexion.prepareStatement(query);
+            ResultSet resultado = ps.executeQuery();
+            
+            while( resultado.next() ){
+                Campo = resultado.getString(campos );
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultasSql.class.getName()).log(Level.SEVERE, null, ex);
+           
+        }
+        
+         return Campo;
     }
     
 }
