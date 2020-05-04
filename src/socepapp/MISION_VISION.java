@@ -24,6 +24,8 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     configuracionXml config = new configuracionXml();
     ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
     MiModeloUsuario mod;
+    
+    
     /**
      * Creates new form MISION_VISION
      */
@@ -83,7 +85,7 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          RedesSociales RS = new RedesSociales();
+          RedesSociales RS = new RedesSociales(mod);
           this.escritorioCoperativa.removeAll();
           this.escritorioCoperativa.repaint();
           this.escritorioCoperativa.add(RS);
