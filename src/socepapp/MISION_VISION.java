@@ -5,15 +5,27 @@
  */
 package socepapp;
 
+import Objetos.ImagenMySQL;
 import Objetos.MiModeloUsuario;
 import codigo.ConsultasCrud;
 import coperativa.Miembros;
 import coperativa.MisionVision;
 import coperativa.RedesSociales;
 import coperativa.informacion;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import utilidades.configuracionXml;
 
 /**
@@ -42,6 +54,41 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     
     public void ConfigurarPanel(){
         LabelCoperativa.setText(mod.getNombreUsuario());
+        MiImagen();
+    }
+    
+    public void MiImagen(){
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try {
+            Connection con =  config.getConexion().getConexion();
+            ps = con.prepareStatement("SELECT logo FROM socios WHERE Id=?");
+            ps.setInt(1, mod.getIdUsuario());
+            rs = ps.executeQuery();
+
+            BufferedImage buffimg = null;
+            byte[] image = null;
+            while (rs.next()) {
+                image = rs.getBytes("logo");
+                InputStream img = rs.getBinaryStream(1);
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(jpImagen.getHeight(), jpImagen.getWidth(), buffimg);
+                    jpImagen.add(imagen);
+                    jpImagen.repaint();
+                } catch (IOException ex) {
+                    Logger.getLogger(MISION_VISION.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            Image img = Toolkit.getDefaultToolkit().createImage(image);
+            ImageIcon icon = new ImageIcon(img.getScaledInstance(135, 120, Image.SCALE_DEFAULT));
+            lblImagen.setIcon(icon);
+            lblImagen.repaint();
+            rs.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
     }
     
     private void pantallaMisionVision() {
@@ -103,7 +150,7 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          Miembros Miem = new Miembros();
+          Miembros Miem = new Miembros(mod);
           this.escritorioCoperativa.removeAll();
           this.escritorioCoperativa.repaint();
           this.escritorioCoperativa.add(Miem);
@@ -128,12 +175,14 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         LabelCoperativa = new javax.swing.JLabel();
         BTN_mision = new javax.swing.JToggleButton();
         BTN_rs = new javax.swing.JToggleButton();
         BTN_IC = new javax.swing.JToggleButton();
         BTN_nl = new javax.swing.JToggleButton();
+        jPanel2 = new javax.swing.JPanel();
+        jpImagen = new javax.swing.JPanel();
+        lblImagen = new javax.swing.JLabel();
         escritorioCoperativa = new javax.swing.JDesktopPane();
 
         setPreferredSize(new java.awt.Dimension(1250, 763));
@@ -141,9 +190,6 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
 
         LabelCoperativa.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         LabelCoperativa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -189,14 +235,39 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
             }
         });
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 82, Short.MAX_VALUE)
+        );
+
+        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout jpImagenLayout = new javax.swing.GroupLayout(jpImagen);
+        jpImagen.setLayout(jpImagenLayout);
+        jpImagenLayout.setHorizontalGroup(
+            jpImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblImagen, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+        );
+        jpImagenLayout.setVerticalGroup(
+            jpImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jpImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(BTN_mision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -211,15 +282,21 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(LabelCoperativa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BTN_mision)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTN_rs)
-                    .addComponent(BTN_IC)
-                    .addComponent(BTN_nl))
-                .addContainerGap(14, Short.MAX_VALUE))
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(LabelCoperativa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(BTN_mision)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(BTN_rs)
+                                    .addComponent(BTN_IC)
+                                    .addComponent(BTN_nl)))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 3, Short.MAX_VALUE))
+                    .addComponent(jpImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout escritorioCoperativaLayout = new javax.swing.GroupLayout(escritorioCoperativa);
@@ -262,14 +339,6 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BTN_misionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_misionActionPerformed
-        pantallaMisionVision();
-    }//GEN-LAST:event_BTN_misionActionPerformed
-
-    private void BTN_rsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_rsActionPerformed
-       pantallaResdesSociales();
-    }//GEN-LAST:event_BTN_rsActionPerformed
-
     private void BTN_nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_nlActionPerformed
         pantallaInformacion();
     }//GEN-LAST:event_BTN_nlActionPerformed
@@ -277,6 +346,14 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     private void BTN_ICActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_ICActionPerformed
         pantallaMiembros();
     }//GEN-LAST:event_BTN_ICActionPerformed
+
+    private void BTN_rsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_rsActionPerformed
+        pantallaResdesSociales();
+    }//GEN-LAST:event_BTN_rsActionPerformed
+
+    private void BTN_misionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_misionActionPerformed
+        pantallaMisionVision();
+    }//GEN-LAST:event_BTN_misionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -287,8 +364,10 @@ public class MISION_VISION extends javax.swing.JInternalFrame {
     private javax.swing.JLabel LabelCoperativa;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDesktopPane escritorioCoperativa;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jpImagen;
+    private javax.swing.JLabel lblImagen;
     // End of variables declaration//GEN-END:variables
 }

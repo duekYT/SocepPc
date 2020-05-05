@@ -5,18 +5,80 @@
  */
 package coperativa;
 
+import Objetos.MiModeloUsuario;
+import codigo.ConsultasCrud;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import utilidades.configuracionXml;
+
 /**
  *
  * @author Acer
  */
 public class Miembros extends javax.swing.JInternalFrame {
-
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    MiModeloUsuario mod;
+    String campos = "Nombre, Correo, Lada, Telefono, Socios_ID";
+    String id = "Id_miembro";
+    String tablas = "miembros";
     /**
      * Creates new form Miembros
      */
     public Miembros() {
         initComponents();
     }
+    
+    public Miembros(MiModeloUsuario mod) {
+        this.mod = mod;
+        initComponents();
+    }
+    
+    public void ValidarRegistro(){
+        if(TtxNombre.getText().isEmpty() || TxtCorreo.getText().isEmpty() 
+           || TxtLada.getText().isEmpty() || TxtTelefono.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Algunos campos estan vacios");
+        }else if(crud.esEmail(TxtCorreo.getText())){
+            int exNombre = crud.CompruebaExistencias(TtxNombre.getText(), tablas, "Nombre", id);
+            int exCorreo = crud.CompruebaExistencias(TxtCorreo.getText(), tablas, "Correo", id);
+            int exLada = crud.CompruebaExistencias(TxtLada.getText(), tablas, "Lada", id);
+            int exTelefono = crud.CompruebaExistencias(TxtTelefono.getText(), tablas, "Telefono", id);
+            System.out.println(exNombre + " " + exCorreo + " " + exLada + " " + exTelefono);
+            if((exNombre == 0) && (exCorreo == 0) && (exLada == 0) && (exTelefono == 0)){
+                String nombre = TtxNombre.getText();
+                String correo = TxtCorreo.getText();
+                String lada = TxtLada.getText();
+                String telefono = TxtTelefono.getText();
+                
+                List<Object> datos = new ArrayList<>();
+                datos.add(nombre);
+                datos.add(correo);
+                datos.add(lada);
+                datos.add(telefono);
+                datos.add(mod.getIdUsuario());
+                
+                try {
+                    if(crud.ingresar(datos, tablas, campos)){
+                        JOptionPane.showMessageDialog(null, "registro Guardado");
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Error al registrar");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Miembros.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "El miembro: "+TtxNombre.getText()+ " ya existe"); 
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "El correo es incorrecto");
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,15 +95,15 @@ public class Miembros extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        TtxNombre = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        TxtCorreo = new javax.swing.JTextField();
+        TxtLada = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        TxtTelefono = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        BtnGuardar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -62,23 +124,23 @@ public class Miembros extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel3.setText("NOMBRE:");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        TtxNombre.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        TtxNombre.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("CORREO ELECTRONICO:");
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        TxtCorreo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        TxtCorreo.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        TxtLada.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        TxtLada.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel5.setText("LADA Y TELEFONO:");
 
-        jTextField4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        TxtTelefono.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        TxtTelefono.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/negro.png"))); // NOI18N
@@ -86,8 +148,13 @@ public class Miembros extends javax.swing.JInternalFrame {
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
         jButton2.setText("LIMPIAR");
 
-        jButton3.setBackground(new java.awt.Color(153, 255, 153));
-        jButton3.setText("GUARDAR");
+        BtnGuardar.setBackground(new java.awt.Color(153, 255, 153));
+        BtnGuardar.setText("GUARDAR");
+        BtnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -96,19 +163,19 @@ public class Miembros extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TtxNombre, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TxtCorreo, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TxtLada, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4)))
+                        .addComponent(TxtTelefono)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE))
         );
@@ -119,21 +186,21 @@ public class Miembros extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TtxNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TxtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TxtLada, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -218,11 +285,19 @@ public class Miembros extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
+        ValidarRegistro();
+    }//GEN-LAST:event_BtnGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnGuardar;
+    private javax.swing.JTextField TtxNombre;
+    private javax.swing.JTextField TxtCorreo;
+    private javax.swing.JTextField TxtLada;
+    private javax.swing.JTextField TxtTelefono;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -236,10 +311,6 @@ public class Miembros extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,11 +5,23 @@
  */
 package socepapp;
 
+import Objetos.ImagenMySQL;
 import Objetos.MiModeloUsuario;
 import codigo.ConsultasCrud;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import utilidades.configuracionXml;
 
 /**
@@ -38,8 +50,41 @@ public class INICIO extends javax.swing.JFrame {
         pantallaCoperativa();
     }
     
+    public void MiImagen(){
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try {
+            Connection con =  config.getConexion().getConexion();
+            ps = con.prepareStatement("SELECT logo FROM socios WHERE Id=?");
+            ps.setInt(1, mod.getIdUsuario());
+            rs = ps.executeQuery();
+
+            BufferedImage buffimg = null;
+            byte[] image = null;
+            while (rs.next()) {
+                image = rs.getBytes("logo");
+                InputStream img = rs.getBinaryStream(1);
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(jpImagen.getHeight(), jpImagen.getWidth(), buffimg);
+                } catch (IOException ex) {
+                    Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            Image img = Toolkit.getDefaultToolkit().createImage(image);
+            ImageIcon icon = new ImageIcon(img.getScaledInstance(120, 128, Image.SCALE_DEFAULT));
+            lblImagen.setIcon(icon);
+            lblImagen.repaint();
+            rs.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }
+    
     public void ConfigurarPanel(){
         coperativaLabel.setText(mod.getNombreUsuario());
+        MiImagen();
     }
     
     private void pantallaCoperativa() {
@@ -147,13 +192,13 @@ public class INICIO extends javax.swing.JFrame {
         cholo = new javax.swing.JPanel();
         escritorio = new javax.swing.JDesktopPane();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         coperativaLabel = new javax.swing.JLabel();
         BTN_coperativa = new javax.swing.JToggleButton();
         BTN_articulos = new javax.swing.JToggleButton();
         BTN_servicios = new javax.swing.JToggleButton();
         BTN_eventos = new javax.swing.JToggleButton();
-        BTN_ventas = new javax.swing.JToggleButton();
+        jpImagen = new javax.swing.JPanel();
+        lblImagen = new javax.swing.JLabel();
         BTN_salir = new javax.swing.JButton();
 
         jMenu3.setText("jMenu3");
@@ -177,9 +222,6 @@ public class INICIO extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setMaximumSize(new java.awt.Dimension(100, 100));
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
 
         coperativaLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         coperativaLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -226,15 +268,21 @@ public class INICIO extends javax.swing.JFrame {
             }
         });
 
-        BTN_ventas.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(BTN_ventas);
-        BTN_ventas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/rebaja (1).png"))); // NOI18N
-        BTN_ventas.setText("MIS VENTAS");
-        BTN_ventas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTN_ventasActionPerformed(evt);
-            }
-        });
+        jpImagen.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
+
+        javax.swing.GroupLayout jpImagenLayout = new javax.swing.GroupLayout(jpImagen);
+        jpImagen.setLayout(jpImagenLayout);
+        jpImagenLayout.setHorizontalGroup(
+            jpImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblImagen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jpImagenLayout.setVerticalGroup(
+            jpImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -245,15 +293,14 @@ public class INICIO extends javax.swing.JFrame {
             .addComponent(BTN_articulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(BTN_servicios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(BTN_eventos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(BTN_ventas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jpImagen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jpImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(coperativaLabel)
                 .addGap(18, 18, 18)
                 .addComponent(BTN_coperativa)
@@ -263,9 +310,7 @@ public class INICIO extends javax.swing.JFrame {
                 .addComponent(BTN_servicios)
                 .addGap(18, 18, 18)
                 .addComponent(BTN_eventos)
-                .addGap(18, 18, 18)
-                .addComponent(BTN_ventas)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         BTN_salir.setBackground(new java.awt.Color(255, 255, 255));
@@ -323,10 +368,6 @@ public class INICIO extends javax.swing.JFrame {
         pantallaeEventos();
     }//GEN-LAST:event_BTN_eventosActionPerformed
 
-    private void BTN_ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_ventasActionPerformed
-        pantallaVentas();
-    }//GEN-LAST:event_BTN_ventasActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -369,14 +410,14 @@ public class INICIO extends javax.swing.JFrame {
     private javax.swing.JToggleButton BTN_eventos;
     private javax.swing.JButton BTN_salir;
     private javax.swing.JToggleButton BTN_servicios;
-    private javax.swing.JToggleButton BTN_ventas;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel cholo;
     private javax.swing.JLabel coperativaLabel;
     private javax.swing.JDesktopPane escritorio;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jpImagen;
+    private javax.swing.JLabel lblImagen;
     // End of variables declaration//GEN-END:variables
 }
