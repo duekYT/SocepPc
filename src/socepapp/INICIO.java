@@ -36,6 +36,7 @@ public class INICIO extends javax.swing.JFrame {
     String campos = "Nombre";
     String id = "Id";
     String tabla = "socios";
+   
     /**
      * Creates new form INICIO
      */

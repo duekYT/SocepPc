@@ -239,4 +239,22 @@ public class ConsultasCrud extends conexionBaseDatos{
          return Campo;
     }
     
+     public DefaultTableModel SeleccionaTabla(String tabla, String campos, String id, int respuesta) throws SQLException {
+        String query = "SELECT " + campos + " FROM " + tabla +" WHERE " + id + " = ?;";
+        PreparedStatement ps = conexion.prepareStatement(query);
+        ps.setInt(1, respuesta);
+        ResultSet resultado = ps.executeQuery();
+        DefaultTableModel modelo = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        
+        utilidades.ConversorResultSetADefaultTableModel.rellena(resultado, modelo);
+        ps.close();
+        resultado.close();
+        return modelo;
+    }
+    
 }

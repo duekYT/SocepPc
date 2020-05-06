@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import utilidades.configuracionXml;
 
 /**
@@ -24,8 +26,15 @@ public class Miembros extends javax.swing.JInternalFrame {
     ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
     MiModeloUsuario mod;
     String campos = "Nombre, Correo, Lada, Telefono, Socios_ID";
+    String campos2 = "Nombre = ?, Correo = ?, Lada = ?, Telefono = ?";
     String id = "Id_miembro";
     String tablas = "miembros";
+    
+    String CamposTabla = "miembros.Id_miembro, miembros.Nombre, miembros.Correo, miembros.Lada, miembros.Telefono";
+    String tablaIneer = "miembros INNER JOIN socios ON miembros.Socios_ID = socios.Id";
+    
+    int filaA;
+    int filaId;
     /**
      * Creates new form Miembros
      */
@@ -36,46 +45,155 @@ public class Miembros extends javax.swing.JInternalFrame {
     public Miembros(MiModeloUsuario mod) {
         this.mod = mod;
         initComponents();
+        mostrarMiembros();
+    }
+    
+    public void mostrarMiembros(){
+        try {
+            DefaultTableModel modeloTabla = new DefaultTableModel();
+            modeloTabla = crud.SeleccionaTabla(tablaIneer, CamposTabla, "socios.Id", mod.getIdUsuario());
+            TablaMiembros.setModel(modeloTabla);
+        } catch (SQLException ex) {
+            Logger.getLogger(Miembros.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void ValidarRegistro(){
-        if(TtxNombre.getText().isEmpty() || TxtCorreo.getText().isEmpty() 
-           || TxtLada.getText().isEmpty() || TxtTelefono.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Algunos campos estan vacios");
-        }else if(crud.esEmail(TxtCorreo.getText())){
-            int exNombre = crud.CompruebaExistencias(TtxNombre.getText(), tablas, "Nombre", id);
-            int exCorreo = crud.CompruebaExistencias(TxtCorreo.getText(), tablas, "Correo", id);
-            int exLada = crud.CompruebaExistencias(TxtLada.getText(), tablas, "Lada", id);
-            int exTelefono = crud.CompruebaExistencias(TxtTelefono.getText(), tablas, "Telefono", id);
-            System.out.println(exNombre + " " + exCorreo + " " + exLada + " " + exTelefono);
-            if((exNombre == 0) && (exCorreo == 0) && (exLada == 0) && (exTelefono == 0)){
-                String nombre = TtxNombre.getText();
-                String correo = TxtCorreo.getText();
-                String lada = TxtLada.getText();
-                String telefono = TxtTelefono.getText();
-                
-                List<Object> datos = new ArrayList<>();
-                datos.add(nombre);
-                datos.add(correo);
-                datos.add(lada);
-                datos.add(telefono);
-                datos.add(mod.getIdUsuario());
-                
-                try {
-                    if(crud.ingresar(datos, tablas, campos)){
-                        JOptionPane.showMessageDialog(null, "registro Guardado");
+        String boton = BtnGuardar.getText();
+        switch(boton){
+            case "GUARDAR":
+                if(TtxNombre.getText().isEmpty() || TxtCorreo.getText().isEmpty() 
+                   || TxtLada.getText().isEmpty() || TxtTelefono.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Algunos campos estan vacios");
+                }else if(crud.esEmail(TxtCorreo.getText())){
+                    int exNombre = crud.CompruebaExistencias(TtxNombre.getText(), tablas, "Nombre", id);
+                    int exCorreo = crud.CompruebaExistencias(TxtCorreo.getText(), tablas, "Correo", id);
+                    int exCorreoRes = crud.CompruebaExistencias(TxtCorreo.getText(), "socios", "Correo", "Id");
+                    int exTelefono = crud.CompruebaExistencias(TxtTelefono.getText(), tablas, "Telefono", id);
+                    System.out.println(exNombre + " " + exCorreo + " " + exTelefono + " " + exCorreoRes);
+                    if((exNombre == 0) && (exCorreo == 0) && (exTelefono == 0) && (exCorreoRes == 0)){
+                        String nombre = TtxNombre.getText();
+                        String correo = TxtCorreo.getText();
+                        String lada = TxtLada.getText();
+                        String telefono = TxtTelefono.getText();
+
+                        List<Object> datos = new ArrayList<>();
+                        datos.add(nombre);
+                        datos.add(correo);
+                        datos.add(lada);
+                        datos.add(telefono);
+                        datos.add(mod.getIdUsuario());
+
+                        try {
+                            if(crud.ingresar(datos, tablas, campos)){
+                                JOptionPane.showMessageDialog(null, "registro Guardado");
+                                BtnGuardar.setText("GUARDAR");
+                                LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
+                                VentanaMiembros.setTitleAt(0, "AGREGA MIEMBROS");
+                                mostrarMiembros();
+                                VentanaMiembros.setSelectedIndex(1);
+                            }else{
+                                JOptionPane.showMessageDialog(null, "Error al registrar");
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Miembros.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }else{
+                        JOptionPane.showMessageDialog(null, "El miembro: "+TtxNombre.getText()+ " ya existe"); 
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "El correo es incorrecto");
+                }
+            break;
+            
+            case "ACTUALIZA":
+            try {
+                    String nombre = TtxNombre.getText();
+                    String correo = TxtCorreo.getText();
+                    String lada = TxtLada.getText();
+                    String telefono = TxtTelefono.getText();
+
+                    List<Object> datos2 = new ArrayList<>();
+                    datos2.add(nombre);
+                    datos2.add(correo);
+                    datos2.add(lada);
+                    datos2.add(telefono);
+                    datos2.add(filaId);
+
+                    if(crud.actualizar(datos2, tablas, campos2, id)){
+                        JOptionPane.showMessageDialog(null, "SOCIO ACTUALIZADO");
+                        BtnGuardar.setText("GUARDAR");
+                        LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
+                        VentanaMiembros.setTitleAt(0, "AGREGA MIEMBROS");
+                        mostrarMiembros();
+                        VentanaMiembros.setSelectedIndex(1);
                     }else{
                         JOptionPane.showMessageDialog(null, "Error al registrar");
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(Miembros.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
+                    Logger.getLogger(MisionVision.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+        }
+        
+    }
+    
+    public void Confirmar_eliminacion(){
+        int dialogo = JOptionPane.YES_NO_OPTION;
+        int respuesta = JOptionPane.showConfirmDialog(null, "estas seguro de esta accion? ", "eliminar", dialogo );
+        
+        if(respuesta == 0){
+            eliminar();
+        }
+    }
+    
+    public void eliminar(){
+        int fila = TablaMiembros.getSelectedRow();
+        
+        if(fila >= 0){
+            try {
+            DefaultTableModel NuevoModeloTabla = (DefaultTableModel) TablaMiembros.getModel();
+            int filas = Integer.parseInt(NuevoModeloTabla.getValueAt(fila, 0).toString());
+            
+            boolean resultado = crud.borrar(filas, tablas, id);
+            
+            if(resultado){
+                JOptionPane.showMessageDialog(null, "Has eliminado a un miembro");
+                mostrarMiembros();
             }else{
-                JOptionPane.showMessageDialog(null, "El miembro: "+TtxNombre.getText()+ " ya existe"); 
+                JOptionPane.showMessageDialog(null, "Error al eliminar");
+            }
+            
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(Miembros.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
-            JOptionPane.showMessageDialog(null, "El correo es incorrecto");
+            JOptionPane.showMessageDialog(null, "Miembro no encontrado");
+        }
+    }
+    
+    public void actualizar(){
+        int fila = TablaMiembros.getSelectedRow();
+        if(fila >= 0){
+            DefaultTableModel NuevoModeloTabla = (DefaultTableModel) TablaMiembros.getModel();
+            filaId = Integer.parseInt(NuevoModeloTabla.getValueAt(fila, 0).toString());
+            String filaNombre = NuevoModeloTabla.getValueAt(fila, 1).toString();
+            String filaCorreo = NuevoModeloTabla.getValueAt(fila, 2).toString();
+            String filaLada = NuevoModeloTabla.getValueAt(fila, 3).toString();
+            String filaTelefono = NuevoModeloTabla.getValueAt(fila, 4).toString();
+            TtxNombre.setText(filaNombre);
+            TxtCorreo.setText(filaCorreo);
+            TxtLada.setText(filaLada);
+            TxtTelefono.setText(filaTelefono);
+            
+            BtnGuardar.setText("ACTUALIZA");
+            LabelTitulo.setText("ACTUALIZA MIEMBRO");
+            VentanaMiembros.setTitleAt(0, "ACTUALIZA MIEMBROS");
+            VentanaMiembros.setSelectedIndex(0);
+        }else{
+            JOptionPane.showMessageDialog(null, "Miembro no encontrado");
         }
     }
     
@@ -90,10 +208,13 @@ public class Miembros extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        ItemActualiza = new javax.swing.JMenuItem();
+        ItemElimina = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        VentanaMiembros = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        LabelTitulo = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         TtxNombre = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -106,20 +227,38 @@ public class Miembros extends javax.swing.JInternalFrame {
         BtnGuardar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaMiembros = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
+        ItemActualiza.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/actualizar.png"))); // NOI18N
+        ItemActualiza.setText("ACTUALIZAR");
+        ItemActualiza.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemActualizaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(ItemActualiza);
+
+        ItemElimina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Eliminar.png"))); // NOI18N
+        ItemElimina.setText("ELIMINAR");
+        ItemElimina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemEliminaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(ItemElimina);
+
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 32)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/grupo.png"))); // NOI18N
-        jLabel2.setText("AGREGA UN NUEVO MIEMBRO");
+        LabelTitulo.setFont(new java.awt.Font("Tahoma", 0, 32)); // NOI18N
+        LabelTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/grupo.png"))); // NOI18N
+        LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel3.setText("NOMBRE:");
@@ -166,7 +305,7 @@ public class Miembros extends javax.swing.JInternalFrame {
                         .addComponent(BtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelTitulo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(TtxNombre, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +321,7 @@ public class Miembros extends javax.swing.JInternalFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addComponent(LabelTitulo)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -205,11 +344,11 @@ public class Miembros extends javax.swing.JInternalFrame {
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("AGREGA MIEMBRO", jPanel2);
+        VentanaMiembros.addTab("AGREGA MIEMBRO", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaMiembros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -220,7 +359,8 @@ public class Miembros extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaMiembros.setComponentPopupMenu(jPopupMenu1);
+        jScrollPane1.setViewportView(TablaMiembros);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/grupo.png"))); // NOI18N
@@ -230,6 +370,11 @@ public class Miembros extends javax.swing.JInternalFrame {
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -258,17 +403,17 @@ public class Miembros extends javax.swing.JInternalFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane1.addTab("MIEMBROS", jPanel3);
+        VentanaMiembros.addTab("MIEMBROS", jPanel3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(VentanaMiembros)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+            .addComponent(VentanaMiembros, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -289,17 +434,33 @@ public class Miembros extends javax.swing.JInternalFrame {
         ValidarRegistro();
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
+    private void ItemActualizaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemActualizaActionPerformed
+        actualizar();
+    }//GEN-LAST:event_ItemActualizaActionPerformed
+
+    private void ItemEliminaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemEliminaActionPerformed
+        Confirmar_eliminacion();
+    }//GEN-LAST:event_ItemEliminaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnGuardar;
+    private javax.swing.JMenuItem ItemActualiza;
+    private javax.swing.JMenuItem ItemElimina;
+    private javax.swing.JLabel LabelTitulo;
+    private javax.swing.JTable TablaMiembros;
     private javax.swing.JTextField TtxNombre;
     private javax.swing.JTextField TxtCorreo;
     private javax.swing.JTextField TxtLada;
     private javax.swing.JTextField TxtTelefono;
+    private javax.swing.JTabbedPane VentanaMiembros;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -308,9 +469,8 @@ public class Miembros extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }
