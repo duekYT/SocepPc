@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import utilidades.configuracionXml;
 
 /**
@@ -76,6 +77,7 @@ public class INICIO extends javax.swing.JFrame {
             Image img = Toolkit.getDefaultToolkit().createImage(image);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(120, 128, Image.SCALE_DEFAULT));
             lblImagen.setIcon(icon);
+            lblImagen.setHorizontalAlignment(JLabel.CENTER);
             lblImagen.repaint();
             rs.close();
         } catch (SQLException ex) {
@@ -111,7 +113,7 @@ public class INICIO extends javax.swing.JFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          articulos _articulos = new articulos();
+          articulos _articulos = new articulos(mod);
           this.escritorio.removeAll();
           this.escritorio.repaint();
           this.escritorio.add(_articulos);

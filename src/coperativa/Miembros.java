@@ -226,7 +226,7 @@ public class Miembros extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaArticulos = new javax.swing.JScrollPane();
         TablaMiembros = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
@@ -360,7 +360,7 @@ public class Miembros extends javax.swing.JInternalFrame {
             }
         ));
         TablaMiembros.setComponentPopupMenu(jPopupMenu1);
-        jScrollPane1.setViewportView(TablaMiembros);
+        TablaArticulos.setViewportView(TablaMiembros);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/grupo.png"))); // NOI18N
@@ -380,7 +380,7 @@ public class Miembros extends javax.swing.JInternalFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(TablaArticulos)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -400,7 +400,7 @@ public class Miembros extends javax.swing.JInternalFrame {
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(TablaArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         VentanaMiembros.addTab("MIEMBROS", jPanel3);
@@ -452,6 +452,7 @@ public class Miembros extends javax.swing.JInternalFrame {
     private javax.swing.JMenuItem ItemActualiza;
     private javax.swing.JMenuItem ItemElimina;
     private javax.swing.JLabel LabelTitulo;
+    private javax.swing.JScrollPane TablaArticulos;
     private javax.swing.JTable TablaMiembros;
     private javax.swing.JTextField TtxNombre;
     private javax.swing.JTextField TxtCorreo;
@@ -470,7 +471,6 @@ public class Miembros extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }

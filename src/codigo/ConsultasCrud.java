@@ -256,5 +256,19 @@ public class ConsultasCrud extends conexionBaseDatos{
         resultado.close();
         return modelo;
     }
+     
+    public ResultSet ver(String tabla, String campos, String id, int respuesta){
+        ResultSet rs = null;
+        String query = "SELECT " + campos + " FROM " + tabla +" WHERE " + id + " = ?;";
+        System.out.println(query);
+        try {
+            PreparedStatement ps = conexion.prepareStatement(query);
+            ps.setInt(1, respuesta);
+            rs = ps.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultasCrud.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
     
 }
