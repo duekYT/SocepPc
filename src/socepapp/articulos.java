@@ -50,6 +50,8 @@ public class articulos extends javax.swing.JInternalFrame {
     MiModeloUsuario mod;
     int filaId;
     File fichero;
+    
+    boolean hayimagen = false;
     FileInputStream fis;
     
     String campos = "articulo.Id_socios, articulo.Nombre, articulo.Descripcion, articulo.Precio, articulo.Imagen";
@@ -70,6 +72,8 @@ public class articulos extends javax.swing.JInternalFrame {
         this.mod = mod;
         initComponents();
         mostrar_articulos();
+        BtnGuardar.setEnabled(false);
+        
     }
     
     public void validarRegistro(){
@@ -96,9 +100,9 @@ public class articulos extends javax.swing.JInternalFrame {
                             int idarticulo = crud.Seleccionar_id("articulo WHERE articulo.Id_socios = " + mod.getIdUsuario(), "articulo.Id");
                             System.out.println("El id nuevo es "+idarticulo);
                             ActualizaImagen(idarticulo);
-                            JOptionPane.showMessageDialog(null, "Imagen Guardada");
                             JOptionPane.showMessageDialog(null, "datos guardados");
                             mostrar_articulos();
+                            limpiar();
                             BtnGuardar.setText("GUARDAR");
                             LabelTitulo.setText("AGREGA UN NUEVO ARTICULO");
                             VentanaArticulos.setTitleAt(0, "AGREGA UN ARTICULO");
@@ -116,30 +120,60 @@ public class articulos extends javax.swing.JInternalFrame {
             break;
             
             case "ACTUALIZA":
-            try {
-                    String nombre = TxtNombre.getText();
-                    String descripcion = TxtDescripcion.getText();
-                    double precio = Double.parseDouble(TxtPrecio.getText());
+            if(hayimagen){
+                try {
+                        String nombre = TxtNombre.getText();
+                        String descripcion = TxtDescripcion.getText();
+                        double precio = Double.parseDouble(TxtPrecio.getText());
 
-                    List<Object> datos2 = new ArrayList<>();
-                    datos2.add(nombre);
-                    datos2.add(descripcion);
-                    datos2.add(precio);
-                    datos2.add(fichero);
-                    datos2.add(filaId);
+                        List<Object> datos2 = new ArrayList<>();
+                        datos2.add(nombre);
+                        datos2.add(descripcion);
+                        datos2.add(precio);
+                        datos2.add(fichero);
+                        datos2.add(filaId);
 
-                    if(crud.actualizar(datos2, tabla, campos2, id)){
-                        ActualizaImagen(filaId);
-                        mostrar_articulos();
-                        BtnGuardar.setText("GUARDAR");
-                        LabelTitulo.setText("AGREGA UN NUEVO ARTICULO");
-                        VentanaArticulos.setTitleAt(0, "AGREGA UN ARTICULO");
-                        VentanaArticulos.setSelectedIndex(1);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Error al registrar");
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(MisionVision.class.getName()).log(Level.SEVERE, null, ex);
+                        if(crud.actualizar(datos2, tabla, campos2, id)){
+                            ActualizaImagen(filaId);
+                            JOptionPane.showMessageDialog(null, "ARTICULO ACTUALIZADO");
+                            mostrar_articulos();
+                            limpiar();
+                            BtnGuardar.setText("GUARDAR");
+                            LabelTitulo.setText("AGREGA UN NUEVO ARTICULO");
+                            VentanaArticulos.setTitleAt(0, "AGREGA UN ARTICULO");
+                            VentanaArticulos.setSelectedIndex(1);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Error al registrar");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MisionVision.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                try {
+                        String nombre = TxtNombre.getText();
+                        String descripcion = TxtDescripcion.getText();
+                        double precio = Double.parseDouble(TxtPrecio.getText());
+                        String campos3 = "articulo.Nombre = ?, articulo.Descripcion = ?, articulo.Precio = ?";
+                        List<Object> datos3 = new ArrayList<>();
+                        datos3.add(nombre);
+                        datos3.add(descripcion);
+                        datos3.add(precio);
+                        datos3.add(filaId);
+
+                        if(crud.actualizar(datos3, tabla, campos3, id)){
+                            JOptionPane.showMessageDialog(null, "ARTICULO ACTUALIZADO");
+                            mostrar_articulos();
+                            limpiar();
+                            BtnGuardar.setText("GUARDAR");
+                            LabelTitulo.setText("AGREGA UN NUEVO ARTICULO");
+                            VentanaArticulos.setTitleAt(0, "AGREGA UN ARTICULO");
+                            VentanaArticulos.setSelectedIndex(1);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Error al registrar");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MisionVision.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             break;
         }
@@ -159,7 +193,7 @@ public class articulos extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JOptionPane.showMessageDialog(null, "ARTICULO ACTUALIZADO");
+        
     }
     
     
@@ -282,10 +316,15 @@ public class articulos extends javax.swing.JInternalFrame {
             TxtDescripcion.setText(filaDescripcion);
             selecionaImagenActualiza();
             
+            
             BtnGuardar.setText("ACTUALIZA");
             LabelTitulo.setText("ACTUALIZA ARTICULO");
             VentanaArticulos.setTitleAt(0, "ACTUALIZA UN ARTICULO");
             VentanaArticulos.setSelectedIndex(0);
+            String boton = BtnGuardar.getText();
+            if(boton == "ACTUALIZA"){
+                BtnGuardar.setEnabled(true);
+            }
         }else{
             JOptionPane.showMessageDialog(null, "Miembro no encontrado");
         }
@@ -325,6 +364,19 @@ public class articulos extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             System.err.println(ex.toString());
         }
+    }
+    
+    public void limpiar(){
+        TxtNombre.setText("");
+        TxtPrecio.setText("");
+        TxtDescripcion.setText("");
+        PanelImagen.removeAll();
+        PanelImagen.repaint();
+        hayimagen = false;
+        BtnGuardar.setText("GUARDAR");
+        LabelTitulo.setText("AGREGA UN NUEVO ARTICULO");
+        VentanaArticulos.setTitleAt(0, "AGREGA UN ARTICULO");
+        BtnGuardar.setEnabled(false);
     }
 
     /**
@@ -424,6 +476,11 @@ public class articulos extends javax.swing.JInternalFrame {
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("CANCELAR");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -664,11 +721,24 @@ public class articulos extends javax.swing.JInternalFrame {
 
     private void BtnImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnImagenActionPerformed
         Seleccionaimagen();
+        hayimagen = true;
+        String boton = BtnGuardar.getText();
+        if(boton == "GUARDAR"){
+            if(hayimagen){
+                BtnGuardar.setEnabled(true);
+            }else{
+                BtnGuardar.setEnabled(false);
+            }
+        }
     }//GEN-LAST:event_BtnImagenActionPerformed
 
     private void ItemActualizaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemActualizaActionPerformed
         actualizar();
     }//GEN-LAST:event_ItemActualizaActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        limpiar();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -202,6 +202,8 @@ public class INICIO extends javax.swing.JFrame {
         BTN_eventos = new javax.swing.JToggleButton();
         jpImagen = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
+        rSLabelHora1 = new rojeru_san.componentes.RSLabelHora();
+        rSLabelFecha1 = new rojeru_san.componentes.RSLabelFecha();
         BTN_salir = new javax.swing.JButton();
 
         jMenu3.setText("jMenu3");
@@ -297,6 +299,8 @@ public class INICIO extends javax.swing.JFrame {
             .addComponent(BTN_servicios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(BTN_eventos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jpImagen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(rSLabelHora1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(rSLabelFecha1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +317,10 @@ public class INICIO extends javax.swing.JFrame {
                 .addComponent(BTN_servicios)
                 .addGap(18, 18, 18)
                 .addComponent(BTN_eventos)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                .addComponent(rSLabelFecha1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rSLabelHora1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         BTN_salir.setBackground(new java.awt.Color(255, 255, 255));
@@ -422,5 +429,7 @@ public class INICIO extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jpImagen;
     private javax.swing.JLabel lblImagen;
+    private rojeru_san.componentes.RSLabelFecha rSLabelFecha1;
+    private rojeru_san.componentes.RSLabelHora rSLabelHora1;
     // End of variables declaration//GEN-END:variables
 }
