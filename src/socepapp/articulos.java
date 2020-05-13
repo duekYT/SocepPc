@@ -55,7 +55,9 @@ public class articulos extends javax.swing.JInternalFrame {
     FileInputStream fis;
     
     String campos = "articulo.Id_socios, articulo.Nombre, articulo.Descripcion, articulo.Precio, articulo.Imagen";
+    
     String campos2 = "articulo.Nombre = ?, articulo.Descripcion = ?, articulo.Precio = ?, articulo.Imagen = ?";
+    
     String id = "articulo.Id";
     String tabla = "articulo";
     
@@ -214,7 +216,7 @@ public class articulos extends javax.swing.JInternalFrame {
             try {
                 fis = new FileInputStream(fichero);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(RegistrarSocio.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(articulos.class.getName()).log(Level.SEVERE, null, ex);
             }
             String ruta = fichero.getAbsolutePath();
             System.out.println("tu imagen esta en: " + ruta);
@@ -353,7 +355,7 @@ public class articulos extends javax.swing.JInternalFrame {
                     PanelImagen.add(imagen);
                     PanelImagen.repaint();
                 } catch (IOException ex) {
-                    Logger.getLogger(informacion.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 //            Image img = Toolkit.getDefaultToolkit().createImage(image);

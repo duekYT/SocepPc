@@ -45,6 +45,7 @@ public class ConsultasCrud extends conexionBaseDatos{
         }
         
         String query = "INSERT INTO " + tabla + " (" + campos + ") VALUES" + " (" + valores + ");";
+        System.out.println(query);
         
         PreparedStatement ps = conexion.prepareStatement(query);
         

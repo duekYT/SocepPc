@@ -131,7 +131,7 @@ public class INICIO extends javax.swing.JFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          servicios _servicios = new servicios();
+          servicios _servicios = new servicios(mod);
           this.escritorio.removeAll();
           this.escritorio.repaint();
           this.escritorio.add(_servicios);
@@ -167,7 +167,7 @@ public class INICIO extends javax.swing.JFrame {
           //habrimos la pantalla de clientes
           //String grupo = jLabel3.getText();
           boolean b = true;
-          eventos _eventos = new eventos();
+          eventos _eventos = new eventos(mod);
           this.escritorio.removeAll();
           this.escritorio.repaint();
           this.escritorio.add(_eventos);
