@@ -5,12 +5,15 @@
  */
 package usuarios;
 
+import codigo.ConsultasCrud;
+import utilidades.configuracionXml;
+
 /**
  *
  * @author Acer
  */
 public class UsuarioServicios extends javax.swing.JInternalFrame {
-
+    
     /**
      * Creates new form UsuarioServicios
      */

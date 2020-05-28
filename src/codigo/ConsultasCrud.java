@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -240,6 +241,27 @@ public class ConsultasCrud extends conexionBaseDatos{
          return Campo;
     }
     
+    public String SeleccinaUnCampoLista (String tabla, String campos, String id, String respuesta){
+        
+        String Campo = "";
+        String query = "SELECT " + campos + " FROM " + tabla + " WHERE "+id+" = '"+respuesta+"';";
+        try {
+            
+            PreparedStatement ps = conexion.prepareStatement(query);
+            ResultSet resultado = ps.executeQuery();
+            
+            while( resultado.next() ){
+                Campo = resultado.getString(campos);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultasSql.class.getName()).log(Level.SEVERE, null, ex);
+           
+        }
+        
+         return Campo;
+    }
+    
      public DefaultTableModel SeleccionaTabla(String tabla, String campos, String id, int respuesta) throws SQLException {
         String query = "SELECT " + campos + " FROM " + tabla +" WHERE " + id + " = ?;";
         PreparedStatement ps = conexion.prepareStatement(query);
@@ -258,6 +280,18 @@ public class ConsultasCrud extends conexionBaseDatos{
         return modelo;
     }
      
+    public DefaultListModel listas(String tabla, String campos) throws SQLException{
+        DefaultListModel lista = new DefaultListModel();
+        String query = "SELECT " + campos + " FROM " + tabla;
+        PreparedStatement ps = conexion.prepareStatement(query);
+        ResultSet resultado = ps.executeQuery();
+        while(resultado.next()){
+            String nombre = resultado.getString(1);
+            lista.addElement(nombre);
+        }
+        return lista;
+    }
+     
     public ResultSet ver(String tabla, String campos, String id, int respuesta){
         ResultSet rs = null;
         String query = "SELECT " + campos + " FROM " + tabla +" WHERE " + id + " = ?;";
@@ -271,5 +305,7 @@ public class ConsultasCrud extends conexionBaseDatos{
         }
         return rs;
     }
+    
+    
     
 }
