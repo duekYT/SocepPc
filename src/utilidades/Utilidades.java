@@ -152,13 +152,16 @@ public class Utilidades
     }
     catch (IOException io) 
     {
+      System.out.println( "hola mundo 2" );
       System.out.println(io.getMessage());
       return false;
 		} 
 	  catch (JDOMException jdomex) 
 	  {
+              System.out.println( "hola mundo 3" );
       System.out.println(jdomex.getMessage());
       return false;
+      
 		}
 	  return false;
 	}

@@ -50,6 +50,8 @@ public abstract class conexionBaseDatos {
   //iniciamos la conexion a la base de datos 
   public Connection iniciarConexion() throws SQLException{
     return DriverManager.getConnection(url, usuario, contasena);
+    
+    
   }
   
   //se crean los metodos abtractos para las clases hijas.

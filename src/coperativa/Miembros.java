@@ -87,6 +87,7 @@ public class Miembros extends javax.swing.JInternalFrame {
                         try {
                             if(crud.ingresar(datos, tablas, campos)){
                                 JOptionPane.showMessageDialog(null, "registro Guardado");
+                                limpiar();
                                 BtnGuardar.setText("GUARDAR");
                                 LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
                                 VentanaMiembros.setTitleAt(0, "AGREGA MIEMBROS");
@@ -122,7 +123,8 @@ public class Miembros extends javax.swing.JInternalFrame {
                     datos2.add(filaId);
 
                     if(crud.actualizar(datos2, tablas, campos2, id)){
-                        JOptionPane.showMessageDialog(null, "SOCIO ACTUALIZADO");
+                        JOptionPane.showMessageDialog(null, "MIEMBRO ACTUALIZADO");
+                        limpiar();
                         BtnGuardar.setText("GUARDAR");
                         LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
                         VentanaMiembros.setTitleAt(0, "AGREGA MIEMBROS");
@@ -195,6 +197,16 @@ public class Miembros extends javax.swing.JInternalFrame {
         }else{
             JOptionPane.showMessageDialog(null, "Miembro no encontrado");
         }
+    }
+    
+    public void limpiar(){
+        TtxNombre.setText("");
+        TxtCorreo.setText("");
+        TxtLada.setText("");
+        TxtTelefono.setText("");
+        BtnGuardar.setText("GUARDAR");
+        LabelTitulo.setText("AGREGA UN NUEVO MIEMBRO");
+        VentanaMiembros.setTitleAt(0, "AGREGA MIEMBROS");
     }
     
 
@@ -286,6 +298,11 @@ public class Miembros extends javax.swing.JInternalFrame {
 
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
         jButton2.setText("LIMPIAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         BtnGuardar.setBackground(new java.awt.Color(153, 255, 153));
         BtnGuardar.setText("GUARDAR");
@@ -445,6 +462,10 @@ public class Miembros extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       limpiar();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

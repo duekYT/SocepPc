@@ -5,9 +5,12 @@
  */
 package usuarios;
 
+import Objetos.ModelitoSocio;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import socepapp.INICIO;
 import socepapp.MISION_VISION;
 
@@ -16,14 +19,22 @@ import socepapp.MISION_VISION;
  * @author Acer
  */
 public class PrincipalUsuario extends javax.swing.JFrame {
-
+    ModelitoSocio mod;
+    String filaNombre;
     /**
      * Creates new form PrincipalUsuario
      */
     public PrincipalUsuario() {
         initComponents();
-        pantallaSocioUsuario();
+        pantallaSocioUsuario(true, true);
     }
+    
+    public PrincipalUsuario(String filaNombre) {
+        this.filaNombre = filaNombre;
+        initComponents();
+        pantallaSocioDetalles(filaNombre);
+    }
+    
     
     private void pantallaProductoUsuario() {
     try {
@@ -79,22 +90,26 @@ public class PrincipalUsuario extends javax.swing.JFrame {
    
     }
     
-    private void pantallaSocioUsuario() {
+    public void pantallaSocioUsuario(boolean b, boolean mipantalla) {
+        
     try {
       //habrimos la pantalla de clientes
       //String grupo = jLabel3.getText();
-      boolean b = true;
       UsuariosSocio USO = new UsuariosSocio();
       this.EscritorioUsuario.removeAll();
       this.EscritorioUsuario.repaint();
       this.EscritorioUsuario.add(USO);
       USO.setMaximum(b);
-      USO.setVisible(true);  
+      USO.setVisible(mipantalla);  
 
     } catch (PropertyVetoException ex) {
       Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
     }
    
+    }
+    
+    public void pantallaSocioDetalles(String nom) {
+        BtnPerfilUsuario.setText("Ver"+nom);
     }
 
     /**
@@ -132,7 +147,7 @@ public class PrincipalUsuario extends javax.swing.JFrame {
         buttonGroup1.add(BtnPerfilUsuario);
         BtnPerfilUsuario.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         BtnPerfilUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresamenu.png"))); // NOI18N
-        BtnPerfilUsuario.setText("Coperativas");
+        BtnPerfilUsuario.setText("Empresas");
         BtnPerfilUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnPerfilUsuarioActionPerformed(evt);
@@ -262,7 +277,7 @@ public class PrincipalUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnServiciosUsuarioActionPerformed
 
     private void BtnPerfilUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPerfilUsuarioActionPerformed
-        pantallaSocioUsuario();
+        pantallaSocioUsuario(true, true);
     }//GEN-LAST:event_BtnPerfilUsuarioActionPerformed
 
     private void BtnEventosUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEventosUsuarioActionPerformed

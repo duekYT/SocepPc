@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -290,6 +291,31 @@ public class ConsultasCrud extends conexionBaseDatos{
             lista.addElement(nombre);
         }
         return lista;
+    }
+    
+    public DefaultListModel listaCombo(String tabla, String campos, String id, String respuesta) throws SQLException{
+        DefaultListModel lista = new DefaultListModel();
+        String query = "SELECT " + campos + " FROM " + tabla + " WHERE "+id+" = '"+respuesta+"';";
+        PreparedStatement ps = conexion.prepareStatement(query);
+        ResultSet resultado = ps.executeQuery();
+        while(resultado.next()){
+            String nombre = resultado.getString(1);
+            lista.addElement(nombre);
+        }
+        return lista;
+    }
+    
+    public DefaultComboBoxModel Combo(String tabla, String campos) throws SQLException{
+        DefaultComboBoxModel combo = new DefaultComboBoxModel();
+        String query = "SELECT " + campos + " FROM " + tabla;
+        PreparedStatement ps = conexion.prepareStatement(query);
+        ResultSet resultado = ps.executeQuery();
+        combo.addElement("Todos");
+        while(resultado.next()){
+            String nombre = resultado.getString(1);
+            combo.addElement(nombre);
+        }
+        return combo;
     }
      
     public ResultSet ver(String tabla, String campos, String id, int respuesta){

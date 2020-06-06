@@ -4,19 +4,129 @@
  * and open the template in the editor.
  */
 package usuarios;
+import Objetos.ImagenMySQL;
+import Objetos.ModelitoSocio;
+import codigo.ConsultasCrud;
 import java.applet.*;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
+import socepapp.INICIO;
+import utilidades.configuracionXml;
 /**
  *
  * @author Acer
  */
 public class UsuariosSocio extends javax.swing.JInternalFrame {
-
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
+    String tabla = "socios";
+    String campos = "socios.Nombre";
+    String filaNombre;
+    
+    ModelitoSocio info = new ModelitoSocio();
+    
+    
     /**
      * Creates new form UsuariosSocio
      */
     public UsuariosSocio() {
         initComponents();
+        mostrar_articulos();
+        ListaSocios.setSelectedIndex(0);
+        seleccionearItem();
     }
+    
+//    public UsuariosSocio(ModelitoSocio mod) {
+//        this.mod = mod;
+//        initComponents();
+//        mostrar_articulos();
+//        ListaSocios.setSelectedIndex(0);
+//        seleccionearItem();
+//    }
+    
+    public void mostrar_articulos(){
+        try {
+            DefaultListModel modeloLista = new DefaultListModel();
+            modeloLista = crud.listas(tabla, campos);
+            ListaSocios.setModel(modeloLista);
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void seleccionearItem(){
+        int fila = ListaSocios.getSelectedIndex();
+        if(fila >= 0){
+            DefaultListModel NuevoModeloLista = (DefaultListModel) ListaSocios.getModel();
+            filaNombre = NuevoModeloLista.getElementAt(fila).toString();
+            selecionaImagenActualiza(filaNombre);
+            LabelNombre.setText("Nombre: "+filaNombre);
+            info.setNombre(filaNombre);
+            pantallaProductoUsuario();
+        }
+    }
+    
+    public void selecionaImagenActualiza(String res){
+        PreparedStatement ps;
+        ResultSet rs;
+        PanelImagen.removeAll();
+        PanelImagen.repaint();
+
+        try {
+            Connection con =  config.getConexion().getConexion();
+            ps = con.prepareStatement("SELECT logo FROM socios WHERE socios.Nombre=?");
+            ps.setString(1, res);
+            rs = ps.executeQuery();
+
+            BufferedImage buffimg = null;
+            byte[] image = null;
+            while (rs.next()) {
+                image = rs.getBytes("logo");
+                InputStream img = rs.getBinaryStream(1);
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(165, 121, buffimg);
+                    PanelImagen.add(imagen);
+                    PanelImagen.repaint();
+                } catch (IOException ex) {
+                    Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }
+    
+    public void pantallaProductoUsuario() {
+    try {
+      //habrimos la pantalla de clientes
+      //String grupo = jLabel3.getText();
+      boolean b = true;
+      detallesSocios UP = new detallesSocios(info);
+      this.EscritorioSocio.removeAll();
+      this.EscritorioSocio.repaint();
+      this.EscritorioSocio.add(UP);
+      UP.setMaximum(b);
+      UP.setVisible(true);  
+
+    } catch (PropertyVetoException ex) {
+      Logger.getLogger(INICIO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+   
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,50 +139,62 @@ public class UsuariosSocio extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        ListaSocios = new javax.swing.JList<>();
+        PanelImagen = new javax.swing.JPanel();
+        LabelNombre = new javax.swing.JLabel();
+        EscritorioSocio = new javax.swing.JDesktopPane();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jList1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        ListaSocios.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ListaSocios.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Coperativa 1", "Coperativa 2", "Coperativa 3", "Coperativa 4", "Coperativa 5", "Coperativa 6" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
+        ListaSocios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        ListaSocios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ListaSociosMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ListaSociosMouseReleased(evt);
+            }
+        });
+        ListaSocios.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                ListaSociosValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(ListaSocios);
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Categoria 1", "Categoria 2", "Categoria 3", "Categoria 4", "Categoria 5" }));
+        PanelImagen.setBackground(new java.awt.Color(153, 153, 255));
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
-
-        jPanel2.setBackground(new java.awt.Color(153, 153, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout PanelImagenLayout = new javax.swing.GroupLayout(PanelImagen);
+        PanelImagen.setLayout(PanelImagenLayout);
+        PanelImagenLayout.setHorizontalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 165, Short.MAX_VALUE)
+        );
+        PanelImagenLayout.setVerticalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+
+        LabelNombre.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        LabelNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelNombre.setText("Coperativa: nombre de la coperativa");
+
+        javax.swing.GroupLayout EscritorioSocioLayout = new javax.swing.GroupLayout(EscritorioSocio);
+        EscritorioSocio.setLayout(EscritorioSocioLayout);
+        EscritorioSocioLayout.setHorizontalGroup(
+            EscritorioSocioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Coperativa: nombre de la coperativa");
-
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jButton2.setText("Ver Coperativa");
+        EscritorioSocioLayout.setVerticalGroup(
+            EscritorioSocioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 382, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -80,37 +202,28 @@ public class UsuariosSocio extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(EscritorioSocio)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(103, 103, 103))
+                        .addComponent(PanelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(LabelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 45, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(80, 80, 80))
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EscritorioSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(LabelNombre, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                    .addComponent(PanelImagen, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -127,15 +240,25 @@ public class UsuariosSocio extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ListaSociosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaSociosMouseClicked
+        seleccionearItem();
+    }//GEN-LAST:event_ListaSociosMouseClicked
+
+    private void ListaSociosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaSociosMouseReleased
+        seleccionearItem();
+    }//GEN-LAST:event_ListaSociosMouseReleased
+
+    private void ListaSociosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ListaSociosValueChanged
+        seleccionearItem();
+    }//GEN-LAST:event_ListaSociosValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JDesktopPane EscritorioSocio;
+    private javax.swing.JLabel LabelNombre;
+    private javax.swing.JList<String> ListaSocios;
+    private javax.swing.JPanel PanelImagen;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

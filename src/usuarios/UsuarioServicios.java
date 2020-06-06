@@ -5,7 +5,21 @@
  */
 package usuarios;
 
+import Objetos.ImagenMySQL;
+import Objetos.ModelitoSocio;
 import codigo.ConsultasCrud;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import utilidades.configuracionXml;
 
 /**
@@ -13,12 +27,96 @@ import utilidades.configuracionXml;
  * @author Acer
  */
 public class UsuarioServicios extends javax.swing.JInternalFrame {
+    configuracionXml config = new configuracionXml();
+    ConsultasCrud crud = new ConsultasCrud( config.getConexion().getConexion());
     
+    ModelitoSocio mod;
+    
+    String tabla = "servicios";
+    String campos = "servicios.Nombre";
+    String tablain = "servicios INNER JOIN socios on servicios.MiSocio = socios.Id";
+    String filaNombre;
     /**
      * Creates new form UsuarioServicios
      */
     public UsuarioServicios() {
         initComponents();
+        mostrar_articulos();
+        ListaServicios.setSelectedIndex(0);
+        mostrar_filtro();
+        seleccionearItem();
+    }
+    
+    public void mostrar_articulos(){
+        try {
+            DefaultListModel modeloLista = new DefaultListModel();
+            modeloLista = crud.listas(tabla, campos);
+            ListaServicios.setModel(modeloLista);
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void mostrar_filtro(){
+        try {
+            String tabla2 = "socios";
+            String campos2 = "socios.Nombre";
+            DefaultComboBoxModel modeloCombo = new DefaultComboBoxModel();
+            modeloCombo = crud.Combo(tabla2, campos2);
+            ComboFiltro.setModel(modeloCombo);
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void seleccionearItem(){
+        int fila = ListaServicios.getSelectedIndex();
+        if(fila >= 0){
+            DefaultListModel NuevoModeloLista = (DefaultListModel) ListaServicios.getModel();
+            filaNombre = NuevoModeloLista.getElementAt(fila).toString();
+            String empresa = crud.SeleccinaUnCampoLista(tablain, "socios.Nombre", "servicios.Nombre", filaNombre);
+            String precio = crud.SeleccinaUnCampoLista(tabla, "servicios.Precio", "servicios.Nombre", filaNombre);
+            String descripcion = crud.SeleccinaUnCampoLista(tabla, "servicios.Descripcion", "servicios.Nombre", filaNombre);
+            String Plan = crud.SeleccinaUnCampoLista(tabla, "servicios.Plan", "servicios.Nombre", filaNombre);
+            selecionaImagenActualiza(filaNombre);
+            LabelNombre.setText("Nombre: "+filaNombre);
+            LabelEmpresa.setText("Empresa: "+ empresa);
+            LabelPrecio.setText("Precio: $"+precio);
+            LabelPlan.setText("Plan: "+Plan);
+            DescripcionArea.setText(descripcion);
+        }
+    }
+    
+    public void selecionaImagenActualiza(String res){
+        PreparedStatement ps;
+        ResultSet rs;
+        PanelImagen.removeAll();
+        PanelImagen.repaint();
+
+        try {
+            Connection con =  config.getConexion().getConexion();
+            ps = con.prepareStatement("SELECT Imagen FROM servicios WHERE servicios.Nombre=?");
+            ps.setString(1, res);
+            rs = ps.executeQuery();
+
+            BufferedImage buffimg = null;
+            byte[] image = null;
+            while (rs.next()) {
+                image = rs.getBytes("Imagen");
+                InputStream img = rs.getBinaryStream(1);
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(339, 317, buffimg);
+                    PanelImagen.add(imagen);
+                    PanelImagen.repaint();
+                } catch (IOException ex) {
+                    Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
     }
 
     /**
@@ -32,67 +130,85 @@ public class UsuarioServicios extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        ListaServicios = new javax.swing.JList<>();
+        ComboFiltro = new javax.swing.JComboBox<>();
+        PanelImagen = new javax.swing.JPanel();
+        LabelNombre = new javax.swing.JLabel();
+        LabelEmpresa = new javax.swing.JLabel();
+        LabelPrecio = new javax.swing.JLabel();
+        LabelPlan = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        DescripcionArea = new javax.swing.JTextArea();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jList1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        ListaServicios.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ListaServicios.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Servicio 1", "Servicio 2", "Servicio 3", "Servicio 4", "Servicio 5", "Servicio 6" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
+        ListaServicios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        ListaServicios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ListaServiciosMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ListaServiciosMouseReleased(evt);
+            }
+        });
+        ListaServicios.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                ListaServiciosValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(ListaServicios);
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Coperativa 1", "Coperativa 2", "Coperativa 3", "Coperativa 4", "Coperativa 5" }));
+        ComboFiltro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ComboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Coperativa 1", "Coperativa 2", "Coperativa 3", "Coperativa 4", "Coperativa 5" }));
+        ComboFiltro.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ComboFiltroItemStateChanged(evt);
+            }
+        });
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        PanelImagen.setBackground(new java.awt.Color(153, 153, 255));
 
-        jPanel2.setBackground(new java.awt.Color(153, 153, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout PanelImagenLayout = new javax.swing.GroupLayout(PanelImagen);
+        PanelImagen.setLayout(PanelImagenLayout);
+        PanelImagenLayout.setHorizontalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        PanelImagenLayout.setVerticalGroup(
+            PanelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 317, Short.MAX_VALUE)
         );
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Nombre Del Producto");
+        LabelNombre.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        LabelNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelNombre.setText("Nombre Del Producto");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Coperativa: nombre de la coperativa");
+        LabelEmpresa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        LabelEmpresa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelEmpresa.setText("Coperativa: nombre de la coperativa");
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jButton2.setText("Ver Servicio");
+        LabelPrecio.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        LabelPrecio.setForeground(new java.awt.Color(51, 255, 51));
+        LabelPrecio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelPrecio.setText("$9999");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(51, 255, 51));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("$9999");
+        LabelPlan.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        LabelPlan.setForeground(new java.awt.Color(255, 51, 51));
+        LabelPlan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelPlan.setText("Plan: semanal");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 51, 51));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Plan: semanal");
+        DescripcionArea.setEditable(false);
+        DescripcionArea.setColumns(20);
+        DescripcionArea.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+        DescripcionArea.setLineWrap(true);
+        DescripcionArea.setRows(5);
+        jScrollPane2.setViewportView(DescripcionArea);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,48 +216,44 @@ public class UsuarioServicios extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addComponent(ComboFiltro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(LabelPlan, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(LabelPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addComponent(PanelImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(103, 103, 103))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
+                        .addComponent(ComboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PanelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
+                        .addComponent(LabelNombre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(LabelEmpresa)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(80, 80, 80))
+                            .addComponent(LabelPrecio)
+                            .addComponent(LabelPlan))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -158,18 +270,49 @@ public class UsuarioServicios extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ListaServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaServiciosMouseClicked
+        seleccionearItem();
+    }//GEN-LAST:event_ListaServiciosMouseClicked
+
+    private void ListaServiciosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaServiciosMouseReleased
+        seleccionearItem();
+    }//GEN-LAST:event_ListaServiciosMouseReleased
+
+    private void ListaServiciosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ListaServiciosValueChanged
+        seleccionearItem();
+    }//GEN-LAST:event_ListaServiciosValueChanged
+
+    private void ComboFiltroItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ComboFiltroItemStateChanged
+        String opcion = (String)ComboFiltro.getSelectedItem();
+        if(opcion == "Todos"){
+            mostrar_articulos();
+            ListaServicios.setSelectedIndex(0);
+            seleccionearItem();
+        }else{
+            try {
+                DefaultListModel modeloLista = new DefaultListModel();
+                modeloLista = crud.listaCombo(tablain, campos, "socios.Nombre", opcion);
+                ListaServicios.setModel(modeloLista);
+                ListaServicios.setSelectedIndex(0);
+                seleccionearItem();
+            } catch (SQLException ex) {
+                Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ComboFiltroItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JComboBox<String> ComboFiltro;
+    private javax.swing.JTextArea DescripcionArea;
+    private javax.swing.JLabel LabelEmpresa;
+    private javax.swing.JLabel LabelNombre;
+    private javax.swing.JLabel LabelPlan;
+    private javax.swing.JLabel LabelPrecio;
+    private javax.swing.JList<String> ListaServicios;
+    private javax.swing.JPanel PanelImagen;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }

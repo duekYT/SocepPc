@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import socepapp.articulos;
 import utilidades.configuracionXml;
@@ -42,6 +42,7 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
         initComponents();
         mostrar_articulos();
         ListaArticulos.setSelectedIndex(0);
+        mostrar_filtro();
         seleccionearItem();
         
     }
@@ -56,6 +57,18 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
         }
     }
     
+    public void mostrar_filtro(){
+        try {
+            String tabla2 = "socios";
+            String campos2 = "socios.Nombre";
+            DefaultComboBoxModel modeloCombo = new DefaultComboBoxModel();
+            modeloCombo = crud.Combo(tabla2, campos2);
+            ComboFiltro.setModel(modeloCombo);
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void seleccionearItem(){
         int fila = ListaArticulos.getSelectedIndex();
         if(fila >= 0){
@@ -64,6 +77,7 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
             String empresa = crud.SeleccinaUnCampoLista(tablain, "socios.Nombre", "articulo.Nombre", filaNombre);
             String precio = crud.SeleccinaUnCampoLista(tabla, "articulo.Precio", "articulo.Nombre", filaNombre);
             String descripcion = crud.SeleccinaUnCampoLista(tabla, "articulo.Descripcion", "articulo.Nombre", filaNombre);
+            
             selecionaImagenActualiza(filaNombre);
             LabelNombre.setText("Nombre: "+filaNombre);
             LabelEmpresa.setText("Empresa: "+ empresa);
@@ -91,11 +105,11 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
                 InputStream img = rs.getBinaryStream(1);
                 try {
                     buffimg = ImageIO.read(img);
-                    ImagenMySQL imagen = new ImagenMySQL(PanelImagen.getHeight(), 340, buffimg);
+                    ImagenMySQL imagen = new ImagenMySQL(339, 317, buffimg);
                     PanelImagen.add(imagen);
                     PanelImagen.repaint();
                 } catch (IOException ex) {
-                    Logger.getLogger(articulos.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             rs.close();
@@ -116,8 +130,7 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ListaArticulos = new javax.swing.JList<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        ComboFiltro = new javax.swing.JComboBox<>();
         PanelImagen = new javax.swing.JPanel();
         LabelNombre = new javax.swing.JLabel();
         LabelEmpresa = new javax.swing.JLabel();
@@ -147,13 +160,28 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
                 ListaArticulosKeyReleased(evt);
             }
         });
+        ListaArticulos.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                ListaArticulosValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(ListaArticulos);
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Coperativa 1", "Coperativa 2", "Coperativa 3", "Coperativa 4", "Coperativa 5" }));
-
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        ComboFiltro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ComboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Coperativa 1", "Coperativa 2", "Coperativa 3", "Coperativa 4", "Coperativa 5" }));
+        ComboFiltro.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ComboFiltroItemStateChanged(evt);
+            }
+        });
+        ComboFiltro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ComboFiltroMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ComboFiltroMouseReleased(evt);
+            }
+        });
 
         PanelImagen.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -183,6 +211,7 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
 
         DescripcionArea.setEditable(false);
         DescripcionArea.setColumns(20);
+        DescripcionArea.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         DescripcionArea.setLineWrap(true);
         DescripcionArea.setRows(5);
         jScrollPane2.setViewportView(DescripcionArea);
@@ -193,30 +222,25 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addComponent(ComboFiltro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(LabelNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LabelEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LabelPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                    .addComponent(PanelImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2)
+                    .addComponent(PanelImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(103, 103, 103))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
+                        .addComponent(ComboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -258,16 +282,46 @@ public class UsuarioProductos extends javax.swing.JInternalFrame {
         seleccionearItem();
     }//GEN-LAST:event_ListaArticulosMouseReleased
 
+    private void ComboFiltroMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComboFiltroMouseReleased
+
+    }//GEN-LAST:event_ComboFiltroMouseReleased
+
+    private void ComboFiltroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComboFiltroMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboFiltroMouseClicked
+
+    private void ListaArticulosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ListaArticulosValueChanged
+        seleccionearItem();
+    }//GEN-LAST:event_ListaArticulosValueChanged
+
+    private void ComboFiltroItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ComboFiltroItemStateChanged
+        String opcion = (String)ComboFiltro.getSelectedItem();
+        if(opcion == "Todos"){
+            mostrar_articulos();
+            ListaArticulos.setSelectedIndex(0);
+            seleccionearItem();
+        }else{
+            try {
+                DefaultListModel modeloLista = new DefaultListModel();
+                modeloLista = crud.listaCombo(tablain, campos, "socios.Nombre", opcion);
+                ListaArticulos.setModel(modeloLista);
+                ListaArticulos.setSelectedIndex(0);
+                seleccionearItem();
+            } catch (SQLException ex) {
+                Logger.getLogger(UsuarioProductos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ComboFiltroItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboFiltro;
     private javax.swing.JTextArea DescripcionArea;
     private javax.swing.JLabel LabelEmpresa;
     private javax.swing.JLabel LabelNombre;
     private javax.swing.JLabel LabelPrecio;
     private javax.swing.JList<String> ListaArticulos;
     private javax.swing.JPanel PanelImagen;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

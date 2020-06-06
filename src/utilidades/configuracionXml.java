@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import socepapp.Login;
 import utilidades.Utilidades;
 
 public class configuracionXml extends JFrame {
@@ -88,6 +89,8 @@ public class configuracionXml extends JFrame {
         
       } catch (ClassNotFoundException | SQLException e) {
         e.printStackTrace();
+        System.out.println( "hola mundo 4" );
+        JOptionPane.showMessageDialog(null, "Fallo de conexion");
         resultado_bd = false;
       }
       if (resultado_bd == false) {
@@ -116,6 +119,7 @@ public class configuracionXml extends JFrame {
   private void mostrarMensajeErrorUsuario( String mensaje )
   {
     mostrarMensajeUsuario( mensaje,	"Error", JOptionPane.ERROR_MESSAGE );
+    System.out.println( "hola mundo 1" );
   }
 
   //metodo de salida de mansajes 
